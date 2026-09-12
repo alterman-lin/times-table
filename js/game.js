@@ -24,7 +24,38 @@
   const RING_CIRC = 2 * Math.PI * 32;
 
   let selectedAvatar = 'girl';
+  let selectedTrack = 'girl';
   let quiz = null; // { levelId, questions, index, correctCount, results[], timerId, timeLeft, answered }
+
+  const TRACK_COPY = {
+    girl: {
+      title: '甜心少女的九九乘法大冒險', sub: '和可愛的小白兔與小熊一起，快樂學數學！', startLabel: '開始可愛冒險 →',
+      nameLabel: '輸入你的可愛名字', namePlaceholder: '例如：草莓小公主...',
+    },
+    boy: {
+      title: '改裝小車手的九九乘法大冒險', sub: '每破一關，就把你的愛車修得更帥一點！', startLabel: '開始改裝大冒險 →',
+      nameLabel: '輸入你的帥氣名字', namePlaceholder: '例如：帥氣小王子',
+    },
+  };
+
+  const HOWTO_COPY = {
+    girl: {
+      title: '遊戲玩法',
+      steps: [
+        { icon: '✏️', label: '答對題目' },
+        { icon: '⭐', label: '過關拿金幣' },
+        { icon: '👚', label: '買衣服打扮' },
+      ],
+    },
+    boy: {
+      title: '遊戲玩法',
+      steps: [
+        { icon: '✏️', label: '答對題目' },
+        { icon: '⭐', label: '過關升級' },
+        { icon: '🔧', label: '改裝你的愛車' },
+      ],
+    },
+  };
 
   function showScreen(id) {
     $$('.screen').forEach(s => s.classList.remove('active'));
@@ -36,17 +67,103 @@
     return name ? Storage.getPlayer(name) : null;
   }
 
-  // ---------- 建立角色畫面 ----------
-  function initCreateScreen() {
+  function trackOf(player) {
+    return player && player.track === 'boy' ? 'boy' : 'girl';
+  }
+
+  function isBoy(player) {
+    return trackOf(player) === 'boy';
+  }
+
+  // 切換整個 app 的底色主題（女生粉色格紋 / 男孩車庫冷色調）
+  function applyTheme(track) {
+    $('.app-frame').classList.toggle('theme-boy', track === 'boy');
+  }
+
+  function carStageOf(player) {
+    return LEVELS.reduce((n, l) => n + (player.levels[l.id]?.passed ? 1 : 0), 0);
+  }
+
+  // 角色/車子的唯一渲染入口：依故事線分派給 renderCharacter 或 renderCar
+  function renderPlayerStage(el, player, { mood = 'happy', shabby = false } = {}) {
+    if (isBoy(player)) {
+      renderCar(el, { boyId: player.avatar, stage: carStageOf(player), color: player.carColor, shabby });
+    } else {
+      renderCharacter(el, { base: player.avatar, state: shabby ? 'shabby' : 'dressed', mood, equipped: player.equipped });
+    }
+  }
+
+  // 烤漆顏色選色列，車庫畫面與過關結算卡片共用
+  function buildColorRow(player, onPick) {
+    const row = document.createElement('div');
+    row.className = 'color-row';
+    const current = carColorId(player.carColor);
+    CAR_COLORS.forEach(c => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'color-swatch' + (c.id === current ? ' selected' : '');
+      btn.dataset.color = c.id;
+      btn.title = c.name;
+      btn.addEventListener('click', () => {
+        Storage.updatePlayer(player.name, p => { p.carColor = c.id; });
+        onPick();
+      });
+      row.appendChild(btn);
+    });
+    return row;
+  }
+
+  // ---------- 選故事畫面 ----------
+  function initLandingScreen() {
+    $$('#story-picker .avatar-card').forEach(card => {
+      const track = card.dataset.track;
+      const head = card.querySelector('.avatar-head');
+      if (track === 'boy') renderCarHeadshot(head, 'boy'); else renderHeadshot(head, 'girl');
+      card.addEventListener('click', () => goToCreate(track));
+    });
+  }
+
+  function goToLanding() {
     renderPlayerList();
+    showScreen('screen-landing');
+  }
+
+  // ---------- 建立角色畫面 ----------
+  function goToCreate(track) {
+    selectedTrack = track;
+    applyTheme(track);
+    const cards = $$('#avatar-picker .avatar-card');
+    cards.forEach(c => { c.hidden = c.dataset.track !== track; c.classList.remove('selected'); });
+    const visible = cards.filter(c => c.dataset.track === track);
+    if (visible.length) {
+      visible[0].classList.add('selected');
+      selectedAvatar = visible[0].dataset.avatar;
+    }
+    const copy = TRACK_COPY[track] || TRACK_COPY.girl;
+    $('#create-title').textContent = copy.title;
+    $('#create-sub').textContent = copy.sub;
+    $('#start-btn').textContent = copy.startLabel;
+    $('#name-label').textContent = copy.nameLabel;
+    $('#name-input').placeholder = copy.namePlaceholder;
+    $('#name-input').value = '';
+    $('#create-hint').textContent = '';
+    showScreen('screen-create');
+  }
+
+  function initCreateScreen() {
     $$('#avatar-picker .avatar-card').forEach(card => {
-      renderHeadshot(card.querySelector('.avatar-head'), card.dataset.avatar);
+      const head = card.querySelector('.avatar-head');
+      if (card.dataset.track === 'boy') renderCarHeadshot(head, card.dataset.avatar);
+      else renderHeadshot(head, card.dataset.avatar);
       card.addEventListener('click', () => {
         selectedAvatar = card.dataset.avatar;
-        $$('#avatar-picker .avatar-card').forEach(c => c.classList.toggle('selected', c === card));
+        $$('#avatar-picker .avatar-card').forEach(c => {
+          if (c.dataset.track === card.dataset.track) c.classList.toggle('selected', c === card);
+        });
       });
     });
-    $$('#avatar-picker .avatar-card')[0].classList.add('selected');
+
+    $('#create-back-btn').addEventListener('click', goToLanding);
 
     $('#start-btn').addEventListener('click', () => {
       const nameInput = $('#name-input');
@@ -55,15 +172,34 @@
         $('#create-hint').textContent = '請先輸入名字唷！';
         return;
       }
-      $('#create-hint').textContent = '';
       const existing = Storage.getPlayer(name);
       if (existing) {
+        if (trackOf(existing) !== selectedTrack) {
+          $('#create-hint').textContent = `「${name}」已經有一段${trackOf(existing) === 'boy' ? '改裝小車手' : '甜心少女'}的故事囉，選擇繼續會接回原本的故事～`;
+        }
         Storage.setCurrentPlayer(name);
       } else {
-        Storage.createPlayer(name, selectedAvatar);
+        $('#create-hint').textContent = '';
+        Storage.createPlayer(name, selectedAvatar, selectedTrack);
       }
-      goToMap();
+      goToHowTo(selectedTrack);
     });
+  }
+
+  // ---------- 玩法說明畫面 ----------
+  function goToHowTo(track) {
+    const copy = HOWTO_COPY[track] || HOWTO_COPY.girl;
+    $('#howto-title').textContent = copy.title;
+    const wrap = $('#howto-steps');
+    wrap.innerHTML = '';
+    copy.steps.forEach((step, i) => {
+      if (i > 0) wrap.insertAdjacentHTML('beforeend', '<div class="howto-arrow">→</div>');
+      const el = document.createElement('div');
+      el.className = 'howto-step';
+      el.innerHTML = `<div class="howto-icon">${step.icon}</div><div class="howto-label">${step.label}</div>`;
+      wrap.appendChild(el);
+    });
+    showScreen('screen-howto');
   }
 
   function renderPlayerList() {
@@ -79,9 +215,10 @@
     players.forEach(p => {
       const row = document.createElement('div');
       row.className = 'player-row';
+      const progress = isBoy(p) ? `🚗 ${carStageOf(p)}/6` : `${ICONS.coin} ${p.coins}`;
       row.innerHTML = `
         <span class="p-name">${escapeHtml(p.name)}</span>
-        <span class="p-coins">${ICONS.coin} ${p.coins}</span>
+        <span class="p-coins">${progress}</span>
         <button class="p-select">選擇</button>
         <button class="p-delete">刪除</button>
       `;
@@ -111,12 +248,15 @@
 
   function renderMap() {
     const player = currentPlayer();
-    if (!player) { showScreen('screen-create'); return; }
+    if (!player) { goToLanding(); return; }
+    const boy = isBoy(player);
+    applyTheme(player.track);
     $('#map-player-name').textContent = player.name;
+    $('#map-gold').hidden = boy;
     $('#map-coins').textContent = player.coins;
-    renderCharacter($('#map-shop-btn').querySelector('div'), {
-      base: player.avatar, state: 'dressed', mood: 'happy', equipped: player.equipped,
-    });
+    renderPlayerStage($('#map-shop-btn').querySelector('div'), player);
+    $('#map-shop-btn').title = boy ? '我的車庫' : '前往商店';
+    $('#goto-shop-btn').textContent = boy ? '查看我的改裝車庫 🚗' : '前往甜心商店 🛍';
     $('#map-ending-btn').hidden = !player.completedAll;
 
     const path = $('#level-path');
@@ -141,18 +281,20 @@
     });
   }
 
+  function openSideScreen() {
+    if (isBoy(currentPlayer())) goToGarage(); else goToShop();
+  }
+
   $ready(() => {
-    $('#map-shop-btn').addEventListener('click', goToShop);
-    $('#goto-shop-btn').addEventListener('click', goToShop);
+    $('#map-shop-btn').addEventListener('click', openSideScreen);
+    $('#goto-shop-btn').addEventListener('click', openSideScreen);
     $('#shop-back-btn').addEventListener('click', goToMap);
     $('#map-ending-btn').addEventListener('click', showVictoryEnding);
     $('#shop-ending-btn').addEventListener('click', showVictoryEnding);
-    $('#switch-player-btn').addEventListener('click', () => {
-      $('#name-input').value = '';
-      $('#create-hint').textContent = '';
-      renderPlayerList();
-      showScreen('screen-create');
-    });
+    $('#garage-back-btn').addEventListener('click', goToMap);
+    $('#garage-ending-btn').addEventListener('click', showVictoryEnding);
+    $('#switch-player-btn').addEventListener('click', goToLanding);
+    $('#howto-start-btn').addEventListener('click', goToMap);
   });
 
   // ---------- 作答畫面 ----------
@@ -178,6 +320,7 @@
     const level = LEVELS.find(l => l.id === quiz.levelId);
     const player = currentPlayer();
     $('#quiz-level-name').textContent = level.name;
+    $('#quiz-gold').hidden = isBoy(player);
     $('#quiz-coins').textContent = player.coins;
   }
 
@@ -415,30 +558,56 @@
 
   function renderResult(level, passed, coinsEarned, allDone) {
     const player = currentPlayer();
+    const boy = isBoy(player);
     const card = $('#result-card');
     const stageId = 'result-stage';
     if (passed) {
+      const stage = boy ? carStageOf(player) : 0;
+      const secondStat = boy
+        ? `<div class="r-stat"><div class="num">${stage}/6</div><div class="lab">改裝進度</div></div>`
+        : `<div class="r-stat"><div class="num">+${coinsEarned}</div><div class="lab">獲得金幣</div></div>`;
+      const carNoteHtml = boy
+        ? `<div class="r-car-note">🔧 車子變化：${carStageLabel(stage)}</div>`
+        : '';
+      let buttonsHtml;
+      if (boy) {
+        buttonsHtml = allDone
+          ? `<button class="btn btn-ghost" id="r-garage-btn">查看改裝車庫</button><button class="btn" id="r-ending-btn">查看結局 →</button>`
+          : `<button class="btn btn-ghost" id="r-garage-btn">查看改裝車庫</button><button class="btn" id="r-next-btn">下一關 →</button>`;
+      } else {
+        buttonsHtml = allDone
+          ? `<button class="btn btn-ghost" id="r-shop-btn">前往商店</button><button class="btn" id="r-ending-btn">查看結局 →</button>`
+          : `<button class="btn btn-ghost" id="r-shop-btn">前往商店</button><button class="btn" id="r-next-btn">下一關 →</button>`;
+      }
       card.innerHTML = `
         <div class="r-stage" id="${stageId}"></div>
         <div class="r-title">過關成功！🎉</div>
         <div class="r-sub">${level.name}</div>
+        ${carNoteHtml}
         <div class="r-stats">
           <div class="r-stat"><div class="num">${quiz.correctCount}/10</div><div class="lab">答對題數</div></div>
-          <div class="r-stat"><div class="num">+${coinsEarned}</div><div class="lab">獲得金幣</div></div>
+          ${secondStat}
         </div>
-        <div class="btn-row">
-          ${allDone
-            ? `<button class="btn btn-ghost" id="r-shop-btn">前往商店</button><button class="btn" id="r-ending-btn">查看結局 →</button>`
-            : `<button class="btn btn-ghost" id="r-shop-btn">前往商店</button><button class="btn" id="r-next-btn">下一關 →</button>`}
-        </div>
+        <div class="btn-row">${buttonsHtml}</div>
       `;
-      renderCharacter($('#' + stageId), { base: player.avatar, state: 'dressed', mood: 'happy', equipped: player.equipped });
-      $('#r-shop-btn').addEventListener('click', goToShop);
+      renderPlayerStage($('#' + stageId), player, { mood: 'happy' });
+      if (!boy) $('#r-shop-btn').addEventListener('click', goToShop);
+      if (boy) $('#r-garage-btn').addEventListener('click', goToGarage);
       if (allDone) {
         $('#r-ending-btn').addEventListener('click', showVictoryEnding);
       } else {
         const nextLevel = LEVELS.find(l => l.id === level.id + 1);
         $('#r-next-btn').addEventListener('click', () => enterLevel(nextLevel.id));
+      }
+
+      if (boy && stage >= 4 && stage <= 5) {
+        const wrap = document.createElement('div');
+        if (stage === 4) wrap.innerHTML = `<div class="r-sub">選擇你的烤漆顏色！</div>`;
+        const row = buildColorRow(currentPlayer(), () => {
+          renderPlayerStage($('#' + stageId), currentPlayer(), { mood: 'happy' });
+        });
+        wrap.appendChild(row);
+        card.insertBefore(wrap, card.querySelector('.btn-row'));
       }
     } else {
       card.innerHTML = `
@@ -453,7 +622,7 @@
           <button class="btn btn-ghost" id="r-end-btn">結束本局</button>
         </div>
       `;
-      renderCharacter($('#' + stageId), { base: player.avatar, state: 'dressed', mood: 'sad', equipped: player.equipped });
+      renderPlayerStage($('#' + stageId), player, { mood: 'sad' });
       $('#r-retry-btn').addEventListener('click', () => enterLevel(level.id));
       $('#r-end-btn').addEventListener('click', showAbandonEnding);
     }
@@ -469,7 +638,7 @@
     const player = currentPlayer();
     $('#shop-coins').textContent = player.coins;
     $('#shop-ending-btn').hidden = !player.completedAll;
-    renderCharacter($('#shop-char-preview'), { base: player.avatar, state: 'dressed', mood: 'happy', equipped: player.equipped });
+    renderPlayerStage($('#shop-char-preview'), player);
 
     const cats = $('#shop-categories');
     cats.innerHTML = '';
@@ -533,11 +702,59 @@
     renderShop();
   }
 
+  // ---------- 改裝車庫（男孩線） ----------
+  function goToGarage() {
+    renderGarage();
+    showScreen('screen-garage');
+  }
+
+  function renderGarage() {
+    const player = currentPlayer();
+    const stage = carStageOf(player);
+    $('#garage-ending-btn').hidden = !player.completedAll;
+    renderPlayerStage($('#garage-car-preview'), player);
+
+    const panels = $('#garage-panels');
+    panels.innerHTML = '';
+
+    const statusBox = document.createElement('div');
+    statusBox.className = 'shop-cat';
+    statusBox.innerHTML = `<div class="cat-title">目前狀態</div><p class="hint-text" style="color:#5a4a42;">${carStageLabel(stage)}（${stage}/6）</p>`;
+    panels.appendChild(statusBox);
+
+    const colorBox = document.createElement('div');
+    colorBox.className = 'shop-cat';
+    colorBox.innerHTML = `<div class="cat-title">烤漆顏色</div>`;
+    if (stage >= 4) {
+      colorBox.appendChild(buildColorRow(player, renderGarage));
+    } else {
+      colorBox.insertAdjacentHTML('beforeend', `<p class="hint-text">通過第四關就能自訂烤漆顏色囉！</p>`);
+    }
+    panels.appendChild(colorBox);
+  }
+
   // ---------- 結局 ----------
   function showVictoryEnding() {
     const player = currentPlayer();
     const content = $('#ending-content');
     content.className = 'ending-content';
+
+    if (isBoy(player)) {
+      content.innerHTML = `
+        <div class="e-stage" id="e-stage"></div>
+        <div class="e-title">全部過關！你的夢想跑車到手了！👑</div>
+        <div class="e-msg">你的努力被看見了，這是給你的全新跑車！<br>九九乘法，你已經完全征服了！</div>
+        <div class="ending-stats">
+          <div class="r-stat"><div class="num">6/6</div><div class="lab">關卡全破</div></div>
+        </div>
+        <div class="btn-row"><button class="btn" id="e-restart-btn">重新開始新的一局</button></div>
+      `;
+      renderPlayerStage($('#e-stage'), player, { mood: 'happy' });
+      $('#e-restart-btn').addEventListener('click', restartRun);
+      showScreen('screen-ending');
+      return;
+    }
+
     content.innerHTML = `
       <div class="e-stage" id="e-stage"></div>
       <div class="e-title">恭喜全部過關！👑</div>
@@ -571,13 +788,16 @@
     Storage.updatePlayer(player.name, p => { p.abandoned = true; });
     const content = $('#ending-content');
     content.className = 'ending-content abandon';
+    const msg = isBoy(player)
+      ? '沒關係，你的車先停在車庫裡等你唷！<br>下次再一起挑戰九九乘法，把它修得更帥吧！'
+      : '沒關係，下次再一起挑戰九九乘法吧！<br>小熊在這裡等你回來唷。';
     content.innerHTML = `
       <div class="e-stage" id="e-stage"></div>
       <div class="e-title">中途放棄了嗎……</div>
-      <div class="e-msg">沒關係，下次再一起挑戰九九乘法吧！<br>小熊在這裡等你回來唷。</div>
+      <div class="e-msg">${msg}</div>
       <div class="btn-row"><button class="btn" id="e-restart-btn">重新開始</button></div>
     `;
-    renderCharacter($('#e-stage'), { base: player.avatar, state: 'shabby', equipped: player.equipped });
+    renderPlayerStage($('#e-stage'), player, { shabby: true });
     $('#e-restart-btn').addEventListener('click', restartRun);
     showScreen('screen-ending');
   }
@@ -595,12 +815,13 @@
   }
 
   $ready(() => {
+    initLandingScreen();
     initCreateScreen();
     const startingPlayer = Storage.getCurrentPlayerName();
     if (startingPlayer && Storage.getPlayer(startingPlayer)) {
       goToMap();
     } else {
-      showScreen('screen-create');
+      goToLanding();
     }
   });
 })();

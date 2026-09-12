@@ -53,28 +53,20 @@ const Storage = (() => {
     return load().players[name] || null;
   }
 
-  function createPlayer(name, avatar) {
+  function createPlayer(name, avatar, track) {
     const data = load();
     data.players[name] = {
       name,
       avatar,
+      track: track === 'boy' ? 'boy' : 'girl',
       coins: 0,
       inventory: defaultInventory(),
       equipped: defaultEquipped(),
       levels: defaultLevels(),
       completedAll: false,
       abandoned: false,
+      carColor: null,
     };
-    data.currentPlayer = name;
-    save(data);
-    return data.players[name];
-  }
-
-  function ensurePlayer(name, avatar) {
-    const data = load();
-    if (!data.players[name]) {
-      return createPlayer(name, avatar);
-    }
     data.currentPlayer = name;
     save(data);
     return data.players[name];
@@ -110,11 +102,12 @@ const Storage = (() => {
       p.levels = defaultLevels();
       p.completedAll = false;
       p.abandoned = false;
+      p.carColor = null;
     });
   }
 
   return {
-    listPlayers, getCurrentPlayerName, getPlayer, createPlayer, ensurePlayer,
+    listPlayers, getCurrentPlayerName, getPlayer, createPlayer,
     setCurrentPlayer, deletePlayer, updatePlayer, resetProgress,
   };
 })();

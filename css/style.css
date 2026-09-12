@@ -10,6 +10,22 @@ html, body {
 button { font-family: inherit; }
 img { -webkit-user-drag: none; user-select: none; }
 
+/* ---- 主題色彩變數：女生線（預設）與男孩線共用同一套規則，只換變數值 ---- */
+:root {
+  --accent: #ff69b4;
+  --accent-dark: #db7093;
+  --accent-rgb: 255,105,180;
+  --secondary: #9370db;
+  --secondary-light: #c9b6ff;
+  --secondary-dark: #6f56b8;
+  --secondary-rgb: 147,112,219;
+  --border: #ffb6c1;
+  --border-rgb: 255,182,193;
+  --light-a: #fff0f5;
+  --light-b: #ffe1ea;
+  --light-c: #ffd3dd;
+}
+
 .app-frame {
   position: relative;
   min-height: 100vh;
@@ -23,6 +39,29 @@ img { -webkit-user-drag: none; user-select: none; }
   box-shadow: inset 0 0 0 10px #ffb6c1, inset 0 0 0 14px #ffffff;
 }
 
+/* 男孩線：整個 app 底色換成冷色調車庫風格，配色變數也一併換成藍灰色系 */
+.app-frame.theme-boy {
+  --accent: #2f7dc4;
+  --accent-dark: #245f96;
+  --accent-rgb: 47,125,196;
+  --secondary: #5c7fa3;
+  --secondary-light: #9dc4e6;
+  --secondary-dark: #3d5f82;
+  --secondary-rgb: 92,127,163;
+  --border: #9db8cf;
+  --border-rgb: 157,184,207;
+  --light-a: #eef5fb;
+  --light-b: #dcebf5;
+  --light-c: #cfe3f0;
+
+  background:
+    linear-gradient(90deg, rgba(90,130,170,0.14) 50%, transparent 50%),
+    linear-gradient(0deg, rgba(90,130,170,0.14) 50%, transparent 50%),
+    linear-gradient(135deg, #eef4f9 0%, #dde7f0 100%);
+  background-size: 40px 40px;
+  box-shadow: inset 0 0 0 10px #9db8cf, inset 0 0 0 14px #ffffff;
+}
+
 .screen {
   display: none;
   min-height: 100vh;
@@ -33,74 +72,112 @@ img { -webkit-user-drag: none; user-select: none; }
 }
 .screen.active { display: flex; }
 
+/* 選故事畫面：不用少女風粉色格紋，改用中性、雙主題融合的可平鋪底紋 */
+#screen-landing {
+  background: #fffef7 url('../assets/final/landing_pattern.jpg') repeat;
+}
+/* 標題此時還沒選任何故事線，配色維持中性（不用粉色也不用藍色） */
+#screen-landing .banner h1 { color: #d98c3f; }
+
 /* ---- Banner / headings ---- */
 .banner { text-align: center; padding: 12px 0 6px; }
 .banner h1 {
-  font-weight: 700; font-size: clamp(24px, 5vw, 40px); margin: 0; color: #ff69b4;
+  font-weight: 700; font-size: clamp(24px, 5vw, 40px); margin: 0; color: var(--accent);
   text-shadow: 0 2px 0 rgba(255,255,255,0.8); letter-spacing: 1px;
 }
-.banner p { margin: 10px 0 0; font-size: 15px; color: #9370db; font-weight: 600; }
+.banner p { margin: 10px 0 0; font-size: 15px; color: var(--secondary); font-weight: 600; }
 
 /* ---- Buttons ---- */
 .btn {
   font-family: 'Quicksand', sans-serif; font-weight: 700; letter-spacing: 1px; border: none; cursor: pointer;
   border-radius: 22px; padding: 15px 40px; font-size: 18px;
-  background: linear-gradient(180deg,#ffb6c1,#ff69b4); color: #ffffff;
-  box-shadow: 0 6px 0 #db7093, 0 10px 20px rgba(255,105,180,0.35);
+  background: linear-gradient(180deg,var(--border),var(--accent)); color: #ffffff;
+  box-shadow: 0 6px 0 var(--accent-dark), 0 10px 20px rgba(var(--accent-rgb),0.35);
   transition: transform .08s ease;
 }
-.btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #db7093, 0 4px 10px rgba(255,105,180,0.3); }
+.btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--accent-dark), 0 4px 10px rgba(var(--accent-rgb),0.3); }
 .btn:disabled { opacity: .45; cursor: not-allowed; }
-.btn-secondary { background: linear-gradient(180deg,#c9b6ff,#9370db); box-shadow: 0 6px 0 #6f56b8, 0 10px 20px rgba(147,112,219,0.35); }
-.btn-secondary:active { box-shadow: 0 2px 0 #6f56b8, 0 4px 10px rgba(147,112,219,0.3); }
-.btn-ghost { background: #ffffff; color: #ff69b4; box-shadow: 0 6px 0 #ffd3dd, 0 10px 16px rgba(255,182,193,0.3); border: 2px solid #ffd3dd; }
-.btn-ghost:active { box-shadow: 0 2px 0 #ffd3dd; }
+.btn-secondary { background: linear-gradient(180deg,var(--secondary-light),var(--secondary)); box-shadow: 0 6px 0 var(--secondary-dark), 0 10px 20px rgba(var(--secondary-rgb),0.35); }
+.btn-secondary:active { box-shadow: 0 2px 0 var(--secondary-dark), 0 4px 10px rgba(var(--secondary-rgb),0.3); }
+.btn-ghost { background: #ffffff; color: var(--accent); box-shadow: 0 6px 0 var(--light-c), 0 10px 16px rgba(var(--border-rgb),0.3); border: 2px solid var(--light-c); }
+.btn-ghost:active { box-shadow: 0 2px 0 var(--light-c); }
 .btn-small { padding: 9px 22px; font-size: 14px; border-radius: 16px; }
 .btn-row { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; margin-top: 8px; width: 100%; align-self: stretch; box-sizing: border-box; }
 
 /* ---- Create screen ---- */
 .content { display: flex; flex-direction: column; align-items: center; gap: 22px; padding: 10px 12px 0; width: 100%; max-width: 760px; }
 .player-list {
-  width: 100%; max-width: 460px; background: rgba(255,255,255,0.9); border: 3px dashed #ffb6c1; border-radius: 20px;
+  width: 100%; max-width: 460px; background: rgba(255,255,255,0.9); border: 3px dashed var(--border); border-radius: 20px;
   padding: 14px 20px; box-sizing: border-box;
 }
-.player-list-title { font-weight: 700; color: #db7093; font-size: 14px; margin-bottom: 8px; }
+.player-list-title { font-weight: 700; color: var(--accent-dark); font-size: 14px; margin-bottom: 8px; }
 .player-list-items { display: flex; flex-direction: column; gap: 8px; }
 .player-row { display: flex; align-items: center; gap: 10px; background: #fffaf5; border-radius: 14px; padding: 8px 12px; }
 .player-row .p-name { flex: 1; font-weight: 700; color: #5a4a42; }
-.player-row .p-coins { font-size: 12px; color: #e05a7a; font-weight: 700; }
+.player-row .p-coins { font-size: 12px; color: var(--accent-dark); font-weight: 700; }
 .player-row button { border: none; background: none; cursor: pointer; font-size: 12px; font-weight: 700; border-radius: 10px; padding: 6px 10px; }
-.player-row .p-select { background: #ffd3dd; color: #db7093; }
+.player-row .p-select { background: var(--light-c); color: var(--accent-dark); }
 .player-row .p-delete { color: #a08a80; }
 
 .name-card {
   width: 100%; max-width: 440px; background: rgba(255,255,255,0.92);
-  border: 3px dashed #ffb6c1; border-radius: 20px; box-shadow: 0 8px 16px rgba(255,182,193,0.3);
+  border: 3px dashed var(--border); border-radius: 20px; box-shadow: 0 8px 16px rgba(var(--border-rgb),0.3);
   padding: 16px 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px;
 }
-.name-card label { font-weight: 700; font-size: 14px; color: #db7093; }
+.name-card label { font-weight: 700; font-size: 14px; color: var(--accent-dark); }
 .name-card input {
   font-family: 'Quicksand', sans-serif; font-size: 16px; padding: 11px 16px; border-radius: 14px;
-  border: 2px solid #ffc0cb; background: #fffaf5; color: #5a4a42; outline: none; width: 100%;
+  border: 2px solid var(--border); background: #fffaf5; color: #5a4a42; outline: none; width: 100%;
 }
 .avatars { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; width: 100%; align-self: stretch; box-sizing: border-box; }
 .avatar-card {
   width: 168px; background: rgba(255,255,255,0.94); border: none; cursor: pointer;
   border-radius: 22px; padding: 14px 10px 16px; box-sizing: border-box;
   display: flex; flex-direction: column; align-items: center; gap: 6px;
-  box-shadow: 0 6px 12px rgba(255,182,193,0.35);
+  box-shadow: 0 6px 12px rgba(var(--border-rgb),0.35);
 }
-.avatar-card.selected { box-shadow: 0 0 0 4px #ff69b4, 0 10px 20px rgba(255,105,180,0.35); }
+.avatar-card.selected { box-shadow: 0 0 0 4px var(--accent), 0 10px 20px rgba(var(--accent-rgb),0.35); }
 /* 頭像裁切：直接放大同一張全身立繪、只露出頭部區域（原圖頭部約落在頂端 38% 高度處） */
 .avatar-head {
   width: 130px; height: 130px; margin: 0 auto; border-radius: 50%; box-sizing: border-box;
-  border: 4px solid #ffe1ea; background-color: #fff5f8;
+  border: 4px solid var(--light-b); background-color: var(--light-a);
   background-repeat: no-repeat; background-position: 50% 0%; background-size: 229px 341px;
 }
-.avatar-card .name { font-weight: 700; font-size: 15px; color: #ff69b4; }
+/* 男孩線構圖是「男孩+車」，男孩的臉自然比女生單獨立繪低一些，
+   往下移一點裁切窗口才能對到臉，不用重畫圖 */
+.avatar-card[data-track="boy"] .avatar-head { background-position: 50% 13%; }
+/* 選故事畫面此時 .app-frame 還沒套用 theme-boy（要選了才知道），
+   所以「改裝小車手」這張故事卡片自己局部套用藍色系變數，
+   不影響旁邊「甜心少女」卡片；建立角色畫面的男孩頭像卡也會一併套用（值相同，不衝突）*/
+.avatar-card[data-track="boy"] {
+  --accent: #2f7dc4;
+  --accent-dark: #245f96;
+  --accent-rgb: 47,125,196;
+  --secondary: #5c7fa3;
+  --border: #9db8cf;
+  --border-rgb: 157,184,207;
+  --light-a: #eef5fb;
+  --light-b: #dcebf5;
+  --light-c: #cfe3f0;
+}
+.avatar-card .name { font-weight: 700; font-size: 15px; color: var(--accent); }
 .avatar-card .desc { font-size: 11.5px; color: #a08a80; text-align: center; line-height: 1.5; }
 .cta-row { display: flex; justify-content: center; padding-top: 4px; }
 .hint-text { color: #ff5c7a; font-weight: 700; font-size: 13px; min-height: 18px; }
+
+/* ---- 玩法說明畫面 ---- */
+.howto-steps {
+  display: flex; gap: 14px; justify-content: center; align-items: center; flex-wrap: wrap;
+  width: 100%; align-self: stretch; box-sizing: border-box; margin-top: 10px;
+}
+.howto-step {
+  width: 150px; background: rgba(255,255,255,0.94); border-radius: 22px; padding: 22px 14px;
+  box-shadow: 0 6px 12px rgba(var(--border-rgb),0.35);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.howto-step .howto-icon { font-size: 38px; line-height: 1; }
+.howto-step .howto-label { font-weight: 700; font-size: 14.5px; color: var(--accent-dark); text-align: center; line-height: 1.5; }
+.howto-arrow { font-size: 22px; font-weight: 700; color: var(--secondary); }
 
 /* ---- Character stack (shared) ----
    Every character asset shares a 282x420 canvas. Containers declare only a
@@ -120,18 +197,18 @@ img { -webkit-user-drag: none; user-select: none; }
 .topbar {
   width: 100%; max-width: 900px; display: flex; align-items: center; justify-content: space-between;
   padding: 14px 22px; box-sizing: border-box; gap: 14px; flex-wrap: wrap;
-  background: rgba(255,255,255,0.85); border: 3px dashed #ffb6c1; border-radius: 24px;
+  background: rgba(255,255,255,0.85); border: 3px dashed var(--border); border-radius: 24px;
 }
-.level-name { font-weight: 700; font-size: 15px; color: #ff69b4; }
-.counter { font-weight: 700; font-size: 15px; color: #e05a7a; }
-.player-tag { font-weight: 700; font-size: 15px; color: #ff69b4; }
-.gold { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 15px; color: #e05a7a; }
+.level-name { font-weight: 700; font-size: 15px; color: var(--accent); }
+.counter { font-weight: 700; font-size: 15px; color: var(--accent-dark); }
+.player-tag { font-weight: 700; font-size: 15px; color: var(--accent); }
+.gold { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 15px; color: var(--accent-dark); }
 .right-group { display: flex; align-items: center; gap: 16px; }
 .avatar-mini { width: 40px; height: 56px; border: none; background: none; cursor: pointer; padding: 0; }
 .avatar-mini > div { width: 100%; height: 100%; position: relative; }
 
 /* ---- Level map ---- */
-.map-title { font-weight: 700; color: #9370db; margin: 18px 0 6px; font-size: 16px; }
+.map-title { font-weight: 700; color: var(--secondary); margin: 18px 0 6px; font-size: 16px; }
 .level-path {
   display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px;
   width: 100%; max-width: 860px; margin-top: 8px;
@@ -139,11 +216,11 @@ img { -webkit-user-drag: none; user-select: none; }
 @media (max-width: 620px) { .level-path { grid-template-columns: repeat(2, minmax(0,1fr)); } }
 .level-node {
   border: none; cursor: pointer; text-align: left; border-radius: 22px; padding: 16px 18px;
-  background: rgba(255,255,255,0.92); box-shadow: 0 6px 14px rgba(255,182,193,0.3);
+  background: rgba(255,255,255,0.92); box-shadow: 0 6px 14px rgba(var(--border-rgb),0.3);
   display: flex; flex-direction: column; gap: 8px; position: relative;
 }
 .level-node.locked { opacity: .55; cursor: not-allowed; }
-.level-node .lv-num { font-weight: 700; color: #ff69b4; font-size: 13px; }
+.level-node .lv-num { font-weight: 700; color: var(--accent); font-size: 13px; }
 .level-node .lv-name { font-weight: 700; color: #5a4a42; font-size: 15px; }
 .level-node .lv-sub { font-size: 11.5px; color: #a08a80; }
 .level-node .lv-badge { position: absolute; top: 12px; right: 14px; }
@@ -155,24 +232,24 @@ img { -webkit-user-drag: none; user-select: none; }
 .timer-wrap { display: flex; flex-direction: column; align-items: center; margin: 6px 0; }
 .timer-badge-wrap { margin: 6px 0; }
 .timer-badge {
-  font-weight: 700; font-size: 13px; color: #9370db; background: #ffffff; border: 2px solid #ffb6c1;
+  font-weight: 700; font-size: 13px; color: var(--secondary); background: #ffffff; border: 2px solid var(--border);
   border-radius: 16px; padding: 7px 18px; display: inline-flex; align-items: center; gap: 6px;
 }
 .qcard {
   width: 100%; max-width: 560px; margin-top: 14px;
-  background: rgba(255,255,255,0.94); border: 3px dashed #ffb6c1; border-radius: 26px;
-  box-shadow: 0 12px 24px rgba(255,182,193,0.35);
+  background: rgba(255,255,255,0.94); border: 3px dashed var(--border); border-radius: 26px;
+  box-shadow: 0 12px 24px rgba(var(--border-rgb),0.35);
   padding: 34px 30px; box-sizing: border-box; text-align: center;
 }
-.qlabel { font-weight: 700; font-size: 15px; color: #9370db; letter-spacing: 1px; margin-bottom: 12px; }
-.equation { font-weight: 700; font-size: clamp(32px, 8vw, 50px); color: #ff69b4; }
+.qlabel { font-weight: 700; font-size: 15px; color: var(--secondary); letter-spacing: 1px; margin-bottom: 12px; }
+.equation { font-weight: 700; font-size: clamp(32px, 8vw, 50px); color: var(--accent); }
 .choices { display: flex; gap: 22px; margin-top: 28px; flex-wrap: wrap; justify-content: center; max-width: 640px; width: 100%; align-self: stretch; box-sizing: border-box; }
 .choice-btn {
   min-width: 130px; padding: 20px 14px; border-radius: 24px; border: none; cursor: pointer;
   font-weight: 700; font-size: 20px;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
   box-shadow: 0 6px 0 rgba(0,0,0,0.15), 0 10px 16px rgba(0,0,0,0.12);
-  background: linear-gradient(180deg,#fff0f5,#ffe1ea); color: #db7093;
+  background: linear-gradient(180deg,var(--light-a),var(--light-b)); color: var(--accent-dark);
   transition: transform .08s ease;
 }
 .choice-btn:active:not(:disabled) { transform: translateY(4px); }
@@ -184,55 +261,60 @@ img { -webkit-user-drag: none; user-select: none; }
 
 .input-pad { margin-top: 22px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
 .input-display {
-  min-width: 140px; min-height: 40px; font-size: 30px; font-weight: 700; color: #ff69b4;
-  background: #fff0f5; border: 2px solid #ffc0cb; border-radius: 16px; padding: 6px 20px;
+  min-width: 140px; min-height: 40px; font-size: 30px; font-weight: 700; color: var(--accent);
+  background: var(--light-a); border: 2px solid var(--border); border-radius: 16px; padding: 6px 20px;
 }
 .keypad { display: grid; grid-template-columns: repeat(3, 62px); gap: 10px; }
 .key-btn {
   width: 62px; height: 52px; border-radius: 14px; border: none; cursor: pointer; font-weight: 700; font-size: 20px;
-  background: #ffffff; color: #5a4a42; box-shadow: 0 4px 0 #ffd3dd, 0 6px 10px rgba(255,182,193,0.3);
+  background: #ffffff; color: #5a4a42; box-shadow: 0 4px 0 var(--light-c), 0 6px 10px rgba(var(--border-rgb),0.3);
 }
-.key-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #ffd3dd; }
-.key-btn.key-clear { background: #ffe1ea; color: #db7093; }
-.key-btn.key-submit { background: linear-gradient(180deg,#ffb6c1,#ff69b4); color: #fff; box-shadow: 0 4px 0 #db7093; }
+.key-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--light-c); }
+.key-btn.key-clear { background: var(--light-b); color: var(--accent-dark); }
+.key-btn.key-submit { background: linear-gradient(180deg,var(--border),var(--accent)); color: #fff; box-shadow: 0 4px 0 var(--accent-dark); }
 
 /* ---- Result screen ---- */
 #screen-result { justify-content: center; }
 .result-card {
-  width: 100%; max-width: 480px; background: rgba(255,255,255,0.95); border: 3px dashed #ffb6c1; border-radius: 28px;
-  padding: 34px 28px; box-sizing: border-box; text-align: center; box-shadow: 0 12px 26px rgba(255,182,193,0.35);
+  width: 100%; max-width: 480px; background: rgba(255,255,255,0.95); border: 3px dashed var(--border); border-radius: 28px;
+  padding: 34px 28px; box-sizing: border-box; text-align: center; box-shadow: 0 12px 26px rgba(var(--border-rgb),0.35);
   display: flex; flex-direction: column; align-items: center; gap: 12px;
 }
 .result-card .r-stage { width: 150px; height: 210px; margin: 0 auto; }
-.result-card .r-title { font-weight: 700; font-size: 24px; color: #ff69b4; }
-.result-card .r-sub { font-size: 14px; color: #9370db; font-weight: 600; }
+.result-card .r-title { font-weight: 700; font-size: 24px; color: var(--accent); }
+.result-card .r-sub { font-size: 14px; color: var(--secondary); font-weight: 600; }
 .result-card .r-stats { display: flex; gap: 22px; justify-content: center; margin: 6px 0; flex-wrap: wrap; width: 100%; align-self: stretch; box-sizing: border-box; }
 .result-card .r-stat { text-align: center; }
-.result-card .r-stat .num { font-weight: 700; font-size: 22px; color: #ff69b4; }
+.result-card .r-stat .num { font-weight: 700; font-size: 22px; color: var(--accent); }
 .result-card .r-stat .lab { font-size: 11px; color: #a08a80; }
+.result-card .r-car-note {
+  font-size: 13px; font-weight: 600; color: var(--accent-dark);
+  background: rgba(var(--border-rgb),0.14); border-radius: 12px; padding: 8px 16px;
+  width: 100%; align-self: stretch; box-sizing: border-box;
+}
 
 /* ---- Shop screen ---- */
 .shop-body { width: 100%; max-width: 980px; display: flex; gap: 26px; margin-top: 18px; flex-wrap: wrap; justify-content: center; }
 .shop-preview {
-  flex: 0 0 240px; background: rgba(255,255,255,0.92); border: 3px dashed #ffb6c1; border-radius: 24px;
+  flex: 0 0 240px; background: rgba(255,255,255,0.92); border: 3px dashed var(--border); border-radius: 24px;
   padding: 18px; box-sizing: border-box; display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 8px 16px rgba(255,182,193,0.3); height: 320px;
+  box-shadow: 0 8px 16px rgba(var(--border-rgb),0.3); height: 320px;
 }
 .avatar-stage-lg { width: 190px; height: 280px; position: relative; }
 .shop-categories { flex: 1 1 480px; max-width: 560px; display: flex; flex-direction: column; gap: 16px; min-width: 280px; }
-.shop-cat { background: rgba(255,255,255,0.9); border-radius: 20px; padding: 14px 18px; box-shadow: 0 6px 12px rgba(255,182,193,0.25); }
-.shop-cat .cat-title { font-weight: 700; color: #db7093; font-size: 14px; margin-bottom: 10px; }
+.shop-cat { background: rgba(255,255,255,0.9); border-radius: 20px; padding: 14px 18px; box-shadow: 0 6px 12px rgba(var(--border-rgb),0.25); }
+.shop-cat .cat-title { font-weight: 700; color: var(--accent-dark); font-size: 14px; margin-bottom: 10px; }
 .shop-cat .cat-items { display: flex; gap: 12px; flex-wrap: wrap; }
 .shop-item {
-  width: 118px; border: 2px solid #ffe1ea; border-radius: 16px; padding: 8px; text-align: center;
+  width: 118px; border: 2px solid var(--light-b); border-radius: 16px; padding: 8px; text-align: center;
   background: #fffaf5; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;
 }
 .shop-item .thumb { width: 70px; height: 90px; position: relative; }
 .shop-item .i-name { font-size: 11.5px; font-weight: 700; color: #5a4a42; }
-.shop-item .i-price { font-size: 11px; color: #e05a7a; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 3px; }
-.shop-item.owned { border-color: #9370db; }
-.shop-item.equipped { border-color: #ff69b4; background: #fff0f5; }
-.shop-item .i-tag { font-size: 10px; font-weight: 700; color: #9370db; }
+.shop-item .i-price { font-size: 11px; color: var(--accent-dark); font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 3px; }
+.shop-item.owned { border-color: var(--secondary); }
+.shop-item.equipped { border-color: var(--accent); background: var(--light-a); }
+.shop-item .i-tag { font-size: 10px; font-weight: 700; color: var(--secondary); }
 .shop-item .i-return {
   font-family: 'Quicksand', sans-serif; font-size: 10px; font-weight: 700; color: #a08a80;
   background: none; border: 1px solid #e8d8d2; border-radius: 10px; padding: 2px 10px; margin-top: 2px; cursor: pointer;
@@ -243,13 +325,27 @@ img { -webkit-user-drag: none; user-select: none; }
 /* ---- Ending screen ---- */
 #screen-ending { justify-content: center; }
 .ending-content {
-  width: 100%; max-width: 560px; background: rgba(255,255,255,0.95); border: 3px dashed #ffb6c1; border-radius: 30px;
-  padding: 36px 30px; box-sizing: border-box; text-align: center; box-shadow: 0 14px 28px rgba(255,182,193,0.35);
+  width: 100%; max-width: 560px; background: rgba(255,255,255,0.95); border: 3px dashed var(--border); border-radius: 30px;
+  padding: 36px 30px; box-sizing: border-box; text-align: center; box-shadow: 0 14px 28px rgba(var(--border-rgb),0.35);
   display: flex; flex-direction: column; align-items: center; gap: 14px;
 }
 .ending-content .e-stage { width: 220px; height: 320px; }
-.ending-content .e-title { font-weight: 700; font-size: 26px; color: #ff69b4; }
-.ending-content .e-msg { font-size: 14px; color: #9370db; font-weight: 600; line-height: 1.7; }
+.ending-content .e-title { font-weight: 700; font-size: 26px; color: var(--accent); }
+.ending-content .e-msg { font-size: 14px; color: var(--secondary); font-weight: 600; line-height: 1.7; }
 .ending-content.abandon .e-title { color: #a08a80; }
 .ending-content.abandon .e-msg { color: #a08a80; }
 .ending-stats { display: flex; gap: 24px; justify-content: center; margin: 4px 0; flex-wrap: wrap; width: 100%; align-self: stretch; box-sizing: border-box; }
+
+/* ---- 男孩線：烤漆顏色選色球（車庫畫面 + 過關結算卡片共用） ---- */
+.color-row {
+  display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+  width: 100%; align-self: stretch; box-sizing: border-box; margin: 4px 0;
+}
+.color-swatch {
+  width: 64px; height: 64px; border-radius: 50%; padding: 0; cursor: pointer;
+  border: 4px solid var(--light-b); box-shadow: 0 4px 10px rgba(var(--border-rgb),0.3);
+}
+.color-swatch.selected { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(var(--accent-rgb),0.25); }
+.color-swatch[data-color="red"] { background: linear-gradient(180deg,#ff8a8a,#e03131); }
+.color-swatch[data-color="blue"] { background: linear-gradient(180deg,#8ec5ff,#2f6fd0); }
+.color-swatch[data-color="yellow"] { background: linear-gradient(180deg,#ffe08a,#f0a91c); }

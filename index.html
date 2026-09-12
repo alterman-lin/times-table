@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>甜心少女的九九乘法大冒險</title>
+<title>九九乘法大冒險</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap">
 <link rel="stylesheet" href="css/style.css">
@@ -11,42 +11,94 @@
 <body>
 <div class="app-frame">
 
-  <!-- 建立角色畫面 -->
-  <section class="screen active" id="screen-create">
+  <!-- 選故事畫面 -->
+  <section class="screen active" id="screen-landing">
     <div class="banner">
-      <h1>甜心少女的九九乘法大冒險</h1>
-      <p>和可愛的小白兔與小熊一起，快樂學數學！</p>
+      <h1>九九乘法大冒險</h1>
+      <p>選一個你喜歡的故事，一起快樂學數學！</p>
     </div>
     <div class="content">
       <div id="player-list" class="player-list" hidden>
         <div class="player-list-title">選擇既有玩家</div>
         <div id="player-list-items" class="player-list-items"></div>
       </div>
+      <div class="map-title">開始新的冒險</div>
+      <div class="avatars" id="story-picker">
+        <button class="avatar-card" data-track="girl" type="button">
+          <div class="avatar-head"></div>
+          <div class="name">甜心少女的故事</div>
+          <div class="desc">賺金幣、逛商店，打扮出最可愛的自己</div>
+        </button>
+        <button class="avatar-card" data-track="boy" type="button">
+          <div class="avatar-head"></div>
+          <div class="name">改裝小車手的故事</div>
+          <div class="desc">每過一關，修好你的專屬愛車</div>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 建立角色畫面 -->
+  <section class="screen" id="screen-create">
+    <div class="banner">
+      <h1 id="create-title">甜心少女的九九乘法大冒險</h1>
+      <p id="create-sub">和可愛的小白兔與小熊一起，快樂學數學！</p>
+    </div>
+    <div class="content">
       <div class="name-card">
-        <label for="name-input">輸入你的可愛名字</label>
+        <label for="name-input" id="name-label">輸入你的可愛名字</label>
         <input id="name-input" type="text" maxlength="12" placeholder="例如：草莓小公主...">
       </div>
       <div class="avatars" id="avatar-picker">
-        <button class="avatar-card" data-avatar="girl" type="button">
+        <button class="avatar-card" data-track="girl" data-avatar="girl" type="button">
           <div class="avatar-head"></div>
           <div class="name">甜美少女</div>
           <div class="desc">智慧聰穎，最會動腦想辦法</div>
         </button>
-        <button class="avatar-card" data-avatar="girl2" type="button">
+        <button class="avatar-card" data-track="girl" data-avatar="girl2" type="button">
           <div class="avatar-head"></div>
           <div class="name">元氣少女</div>
           <div class="desc">活潑開朗，答題速度像風一樣快</div>
         </button>
-        <button class="avatar-card" data-avatar="girl3" type="button">
+        <button class="avatar-card" data-track="girl" data-avatar="girl3" type="button">
           <div class="avatar-head"></div>
           <div class="name">夢幻少女</div>
           <div class="desc">心思細膩，總能算出最聰明的答案</div>
         </button>
+        <button class="avatar-card" data-track="boy" data-avatar="boy" type="button" hidden>
+          <div class="avatar-head"></div>
+          <div class="name">熱血男孩</div>
+          <div class="desc">充滿幹勁，最愛修車也最愛挑戰</div>
+        </button>
+        <button class="avatar-card" data-track="boy" data-avatar="boy2" type="button" hidden>
+          <div class="avatar-head"></div>
+          <div class="name">酷酷男孩</div>
+          <div class="desc">冷靜沉著，做什麼都一步一步來</div>
+        </button>
+        <button class="avatar-card" data-track="boy" data-avatar="boy3" type="button" hidden>
+          <div class="avatar-head"></div>
+          <div class="name">陽光男孩</div>
+          <div class="desc">活力十足，答題跟開車一樣衝勁十足</div>
+        </button>
       </div>
-      <div class="cta-row">
+      <div class="btn-row">
+        <button class="btn btn-ghost" id="create-back-btn" type="button">← 返回</button>
         <button class="btn" id="start-btn">開始可愛冒險 →</button>
       </div>
       <p class="hint-text" id="create-hint"></p>
+    </div>
+  </section>
+
+  <!-- 玩法說明畫面 -->
+  <section class="screen" id="screen-howto">
+    <div class="banner">
+      <h1 id="howto-title">遊戲玩法</h1>
+    </div>
+    <div class="content">
+      <div class="howto-steps" id="howto-steps"></div>
+      <div class="cta-row">
+        <button class="btn" id="howto-start-btn">開始遊戲 →</button>
+      </div>
     </div>
   </section>
 
@@ -55,7 +107,7 @@
     <div class="topbar">
       <div class="player-tag">玩家：<span id="map-player-name"></span> <button class="btn btn-small btn-ghost" id="switch-player-btn" type="button" style="margin-left:8px;">切換玩家</button></div>
       <div class="right-group">
-        <div class="gold"><svg width="16" height="16" viewBox="0 0 30 30"><path d="M15 27 C4 19 4 8 12 5 C14.5 4 15 7 15 9 C15 7 15.5 4 18 5 C26 8 26 19 15 27 Z" fill="#ff5c7a"/></svg><span id="map-coins">0</span></div>
+        <div class="gold" id="map-gold"><svg width="16" height="16" viewBox="0 0 30 30"><path d="M15 27 C4 19 4 8 12 5 C14.5 4 15 7 15 9 C15 7 15.5 4 18 5 C26 8 26 19 15 27 Z" fill="#ff5c7a"/></svg><span id="map-coins">0</span></div>
         <button class="avatar-mini" id="map-shop-btn" title="前往商店"><div></div></button>
       </div>
     </div>
@@ -73,7 +125,7 @@
       <div class="level-name" id="quiz-level-name"></div>
       <div class="counter" id="quiz-counter"></div>
       <div class="right-group">
-        <div class="gold"><svg width="16" height="16" viewBox="0 0 30 30"><path d="M15 27 C4 19 4 8 12 5 C14.5 4 15 7 15 9 C15 7 15.5 4 18 5 C26 8 26 19 15 27 Z" fill="#ff5c7a"/></svg><span id="quiz-coins">0</span></div>
+        <div class="gold" id="quiz-gold"><svg width="16" height="16" viewBox="0 0 30 30"><path d="M15 27 C4 19 4 8 12 5 C14.5 4 15 7 15 9 C15 7 15.5 4 18 5 C26 8 26 19 15 27 Z" fill="#ff5c7a"/></svg><span id="quiz-coins">0</span></div>
       </div>
     </div>
     <div class="dots" id="quiz-dots"></div>
@@ -122,6 +174,21 @@
     </div>
   </section>
 
+  <!-- 改裝車庫畫面（男孩線） -->
+  <section class="screen" id="screen-garage">
+    <div class="topbar">
+      <div class="level-name">我的改裝車庫</div>
+      <div class="right-group">
+        <button class="btn btn-small" id="garage-ending-btn" type="button" hidden>查看結局 →</button>
+        <button class="btn btn-small btn-ghost" id="garage-back-btn">返回地圖</button>
+      </div>
+    </div>
+    <div class="shop-body">
+      <div class="shop-preview"><div class="avatar-stage-lg" id="garage-car-preview"></div></div>
+      <div class="shop-categories" id="garage-panels"></div>
+    </div>
+  </section>
+
   <!-- 結局畫面 -->
   <section class="screen" id="screen-ending">
     <div class="ending-content" id="ending-content"></div>
@@ -133,6 +200,8 @@
 <script src="js/storage.js"></script>
 <script src="js/shop.js"></script>
 <script src="js/character.js"></script>
+<!-- car.js 使用 character.js 定義的 ASSET_PATH / SHABBY_FILTER，必須排在它後面、game.js 前面 -->
+<script src="js/car.js"></script>
 <script src="js/game.js"></script>
 </body>
 </html>

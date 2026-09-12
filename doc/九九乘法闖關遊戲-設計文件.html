@@ -113,6 +113,41 @@
   footer{ text-align:center; margin-top:60px; color:var(--muted); font-size:13px; }
   footer .rule{ width:120px; height:3px; margin:0 auto 18px; background:linear-gradient(90deg, transparent, var(--accent), transparent); }
 
+  .part-banner{
+    text-align:center; margin:64px 0 40px; padding-top:36px; border-top:3px dashed var(--card-border);
+  }
+  .part-banner .kicker{ font-weight:700; letter-spacing:4px; font-size:12px; color:var(--purple); text-transform:uppercase; }
+  .part-banner h1{
+    font-weight:700; font-size:32px; margin:8px 0 10px; color:var(--ink-strong);
+    text-shadow:0 2px 0 rgba(255,255,255,0.7);
+  }
+  .part-banner p{ color:var(--purple); font-size:15px; margin:0; font-weight:600; }
+
+  .decision-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px; }
+  .decision-list li{
+    background:var(--card); border:2px solid #cfe0ff; border-left:6px solid #6fa8ff;
+    border-radius:14px; padding:14px 20px; line-height:1.8; font-size:15px;
+  }
+  .decision-list li b{ color:#3a6fd0; }
+
+  .risk-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px; }
+  .risk-list li{
+    background:var(--card); border:2px solid #ffe1a8; border-left:6px solid #f0a91c;
+    border-radius:14px; padding:14px 20px; line-height:1.8; font-size:15px;
+  }
+  .risk-list li b{ color:#c98600; }
+
+  table.asset-table{ width:100%; border-collapse:collapse; margin-top:16px; font-size:14px; }
+  table.asset-table th, table.asset-table td{
+    text-align:left; padding:10px 14px; border-bottom:1px solid var(--card-border); vertical-align:top;
+  }
+  table.asset-table th{ color:var(--purple); font-size:13px; letter-spacing:1px; }
+  table.asset-table td code{ white-space:nowrap; }
+  .table-scroll{ overflow-x:auto; }
+
+  .swatch-row{ display:flex; gap:10px; margin-top:10px; }
+  .swatch{ width:28px; height:28px; border-radius:50%; border:2px solid #fff; box-shadow:0 2px 4px rgba(0,0,0,0.15); }
+
   @media (max-width:640px){
     .wrap{ padding:36px 16px 70px; }
     header.hero h1{ font-size:28px; }
@@ -140,6 +175,13 @@
       <li><a href="#flow">關卡與遊戲流程</a></li>
       <li><a href="#data">資料設計重點</a></li>
       <li><a href="#verify">驗證方式</a></li>
+      <li><a href="#boy-context">男孩線：背景與需求</a></li>
+      <li><a href="#boy-decisions">男孩線：設計決策</a></li>
+      <li><a href="#boy-data">男孩線：資料與新增檔案</a></li>
+      <li><a href="#boy-screens">男孩線：畫面異動</a></li>
+      <li><a href="#boy-assets">男孩線：美術資產清單</a></li>
+      <li><a href="#boy-risks">男孩線：已知風險</a></li>
+      <li><a href="#boy-verify">男孩線：驗證方式</a></li>
     </ol>
   </nav>
 
@@ -242,6 +284,131 @@
         <li>每次過關後進商店購買品項，確認金幣扣款、已擁有標示、裝備切換即時反映在角色預覽上。</li>
         <li>全破 6 關，確認結局畫面角色身上顯示所有目前裝備的品項；另開一輪測試中途放棄的落魄結局畫面。</li>
         <li>用瀏覽器工具切換手機尺寸，確認版面與按鈕可正常操作。</li>
+      </ol>
+    </div>
+  </section>
+
+  <div class="part-banner">
+    <div class="kicker">Design Document · Part 2</div>
+    <h1>男孩「改裝愛車」主線</h1>
+    <p>雙軌並行：不改動既有女生線，新增一條給男孩玩家的平行故事</p>
+  </div>
+
+  <section id="boy-context">
+    <h2><span class="num">6</span>男孩線：背景與需求</h2>
+    <div class="card">
+      <p>原本的遊戲（Part 1）只有「甜心少女」美術主題，服裝商店的養成回饋對男孩玩家吸引力有限。這次新增一條平行的男孩故事線：選一位男孩角色後，答對關卡不是拿金幣買衣服，而是直接把畫面上那台「男孩坐在裡面」的車，隨著每過一關自動變得更好——從沒氣輪胎的破車，一路修到全新拉風跑車。</p>
+      <p>核心九九乘法答題引擎（題目產生、是非/選擇/輸入三種作答 UI、計時器、過關判定）完全與美術/獎勵主題無關，<strong>100% 原封不動重用</strong>；只有「選角色」與「過關後看到什麼」這兩塊依故事線分岔。</p>
+    </div>
+  </section>
+
+  <section id="boy-decisions">
+    <h2><span class="num">7</span>男孩線：設計決策</h2>
+    <ul class="decision-list">
+      <li><b>先選故事、再選角色：</b>新增最前面的「選故事」畫面（既有玩家名單 + 「甜心少女的故事」/「改裝小車手的故事」兩張故事卡），選完故事才進入建立角色畫面，該畫面依故事只顯示對應的 3 個頭像。</li>
+      <li><b>完全沒有金幣/商店：</b>車子的每個改裝階段純粹由「已過幾關」自動解鎖，不用買、不用花錢——男孩玩家全程看不到金幣數字。</li>
+      <li><b>烤漆顏色（3 選 1）可以隨時重選：</b>不是一次性鎖定，開一個「改裝車庫」畫面讓男孩玩家隨時免費切換，即點即生效、不需要確認對話框。</li>
+      <li><b>3 位男孩、各自一台專屬的車：</b>不是共用同一台車換色，而是各自獨立的車型設計，個人化程度最高，美術量也最大。</li>
+      <li><b>第六關的終極獎勵跑車，顏色不用跟著前面選的烤漆色：</b>當成「有人送你一台全新的車」的驚喜獎勵處理，用文案把「顏色換了」講成故事的一部分，省下 18 張色彩對應圖。</li>
+      <li><b>中途放棄顯示「目前進度的車 + 灰階濾鏡」：</b>不是重置回破爛車，呼應既有女生線「小熊在這裡等你回來」的鼓勵基調——放棄不等於進度歸零，只是車先停在車庫蒙灰。</li>
+    </ul>
+  </section>
+
+  <section id="boy-data">
+    <h2><span class="num">8</span>男孩線：資料與新增檔案</h2>
+    <div class="card">
+      <p><strong>玩家資料</strong>（<code>js/storage.js</code>）新增兩個欄位：<code>track</code>（<code>'girl'</code> 或 <code>'boy'</code>，建立角色時決定，之後不可更改）與 <code>carColor</code>（<code>null</code> 或選定的顏色 id，重新開始時清空）。金幣/服裝欄位對男孩玩家仍然存在但永遠不顯示、不使用——過關判定那段程式碼是全遊戲最關鍵的一段，寧可多留一個沒用到的數字，也不要為了「完全拿掉」去冒風險改動它。</p>
+      <p><strong>車子改裝階段</strong>純粹由「已過幾關」算出（0～6 關全過對應 0～6 階段），不用另外存一個進度值。</p>
+    </div>
+    <ul class="file-list" style="margin-top:16px;">
+      <li><code>js/car.js</code>（新檔案）— 男孩線的渲染邏輯：依「男孩 id + 目前階段 + 烤漆顏色」算出要顯示哪張圖、套用灰階濾鏡；同時提供選角頭像用的裁切來源。架構完全比照既有 <code>js/character.js</code> 的角色渲染方式，兩者互不干涉。</li>
+      <li><code>js/game.js</code> — 新增「選故事」畫面邏輯、「改裝車庫」畫面邏輯、烤漆顏色選色元件；既有的地圖/結算/商店/結局渲染全部改走同一個「依故事線分派」的入口，確保沒有漏改的地方讓男孩角色顯示成女生。</li>
+      <li><code>index.html</code> — 新增「選故事」畫面與「改裝車庫」畫面；建立角色畫面的頭像清單從 3 張擴充成 6 張（3 女生 + 3 男孩，依故事顯示對應 3 張）。</li>
+      <li><code>css/style.css</code> — 只新增「烤漆顏色選色球」一組樣式，其餘畫面版面完全重用既有商店畫面的樣式。</li>
+    </ul>
+  </section>
+
+  <section id="boy-screens">
+    <h2><span class="num">9</span>男孩線：畫面異動總覽</h2>
+    <ol class="flow">
+      <li><b>選故事畫面（新）</b>
+        <p style="margin:8px 0 0; font-size:14.5px;">遊戲最先看到的畫面：既有玩家名單（選了直接進地圖，不用重選故事）+ 兩張故事卡「甜心少女的故事」／「改裝小車手的故事」。</p>
+      </li>
+      <li><b>建立角色畫面</b>
+        <p style="margin:8px 0 0; font-size:14.5px;">依選擇的故事只顯示對應 3 位角色（男孩：熱血男孩／酷酷男孩／陽光男孩），文案與按鈕字樣也依故事切換；新增「返回」按鈕回選故事畫面。</p>
+      </li>
+      <li><b>關卡地圖畫面</b>
+        <p style="margin:8px 0 0; font-size:14.5px;">男孩玩家看不到金幣徽章；原本「前往商店」的按鈕改成「查看我的改裝車庫」；頂欄小頭像顯示目前的車。六個關卡節點與過關/鎖定邏輯完全不變。</p>
+      </li>
+      <li><b>關卡結算畫面</b>
+        <ul>
+          <li><strong>過關：</strong>沒有「前往商店」按鈕，只有「下一關」（全破則只有「查看結局」）；第二格統計從「獲得金幣」改成「改裝進度 N/6」。</li>
+          <li><strong>剛好解鎖烤漆顏色（過第四關）：</strong>結算卡片上直接多出現一排 3 顆選色球，點了當場看到車子變色，不用離開這個畫面。</li>
+          <li><strong>失敗：</strong>顯示「目前維持原樣」的車（車子沒有難過的畫面），按鈕與女生線一樣是「重新挑戰本關」／「結束本局」。</li>
+        </ul>
+      </li>
+      <li><b>改裝車庫畫面（新，取代商店）</b>
+        <p style="margin:8px 0 0; font-size:14.5px;">大圖顯示目前的車、目前改裝階段文字說明；過第四關後多一區「烤漆顏色」，3 顆選色球隨時可切換（免費、即點即生效）；沒過第四關則顯示「通過第四關就能自訂烤漆顏色囉！」的提示。</p>
+      </li>
+      <li><b>結局畫面</b>
+        <ul>
+          <li><strong>全破 6 關：</strong>顯示最終獎勵跑車（單一固定配色），文案改成男孩向的慶祝詞，沒有金幣統計、也沒有兔子熊入鏡。</li>
+          <li><strong>中途放棄：</strong>顯示「目前進度的車」套上灰階濾鏡（不是重置回破爛車），保留鼓勵文案的基調。</li>
+        </ul>
+      </li>
+    </ol>
+  </section>
+
+  <section id="boy-assets">
+    <h2><span class="num">10</span>男孩線：美術資產清單</h2>
+    <div class="card">
+      <p>共 <strong>33 張新圖</strong>（3 位男孩 × 每人 11 張），沿用既有素材流程：Gemini 產出原始圖 → 去背 → 縮圖壓縮，畫布統一 282×420px、透明背景。同一位男孩的 11 張圖，人物位置/比例/鏡頭要保持一致，因為會在同一個畫面容器裡直接切換。</p>
+    </div>
+    <div class="table-scroll">
+      <table class="asset-table">
+        <thead>
+          <tr><th>階段</th><th>檔名（<code>&lt;id&gt;</code> = boy / boy2 / boy3）</th><th>畫面內容</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0（起始，同時是選角頭像來源）</td><td><code>car_&lt;id&gt;_stage0.png</code></td><td>男孩站在生鏽故障車旁，輪胎沒氣，表情有點無奈。頭要落在畫布上方約 38% 高度、水平置中。</td></tr>
+          <tr><td>1（過第 1 關）</td><td><code>car_&lt;id&gt;_stage1.png</code></td><td>同一台車修復站好但灰塵滿佈，男孩略帶期待。</td></tr>
+          <tr><td>2（過第 2 關）</td><td><code>car_&lt;id&gt;_stage2.png</code></td><td>洗得乾乾淨淨、閃閃發亮，輪框仍是原本樣式。</td></tr>
+          <tr><td>3（過第 3 關）</td><td><code>car_&lt;id&gt;_stage3.png</code></td><td>換上新輪框與輪胎，男孩得意。</td></tr>
+          <tr><td>4（過第 4 關，3 色）</td><td><code>car_&lt;id&gt;_stage4_red/blue/yellow.png</code></td><td>第 3 階段的車烤上對應顏色，尚未加裝套件。
+            <div class="swatch-row"><span class="swatch" style="background:linear-gradient(180deg,#ff8a8a,#e03131)"></span><span class="swatch" style="background:linear-gradient(180deg,#8ec5ff,#2f6fd0)"></span><span class="swatch" style="background:linear-gradient(180deg,#ffe08a,#f0a91c)"></span></div>
+          </td></tr>
+          <tr><td>5（過第 5 關，3 色）</td><td><code>car_&lt;id&gt;_stage5_red/blue/yellow.png</code></td><td>同色車加裝運動空力套件（前後包圍、側裙），套件造型三色一致。</td></tr>
+          <tr><td>6（過第 6 關，最終獎勵）</td><td><code>car_&lt;id&gt;_stage6.png</code></td><td>換成另一台全新的跑車（不同車型、固定配色，跟前面選的烤漆色無關），男孩慶祝。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:14px; color:var(--muted); font-size:14px;">不需要另外做大頭照素材——選角畫面的圓形頭像直接重用 <code>stage0</code> 圖裁切。美術定案後會依既有「先產生基準圖、再回傳同一張圖只改一個地方」的疊代方式產生 Gemini 提示詞。</p>
+  </section>
+
+  <section id="boy-risks">
+    <h2><span class="num">11</span>男孩線：已知風險</h2>
+    <ul class="risk-list">
+      <li><b>頭像圓形裁切依賴頭部位置：</b>既有裁切效果假設頭在畫布上方置中；男孩+車的構圖若讓男孩偏一側，頭像會裁到車頂而不是臉。已在美術清單特別註明構圖要求，真的沒對齊也能用少量 CSS 補救，不必重畫。</li>
+      <li><b>地圖頂欄迷你頭像偏小：</b>車子構圖在極小尺寸下可能不易辨識，跟女生角色現況風險相同，先接受現況。</li>
+      <li><b>同名但故事線不同的玩家：</b>角色與故事線一旦建立無法更改；輸入既有名字會直接接手該玩家原本的故事線，只會提示一句、不會阻擋。</li>
+    </ul>
+  </section>
+
+  <section id="boy-verify">
+    <h2><span class="num">12</span>男孩線：驗證方式</h2>
+    <div class="card">
+      <p style="margin-bottom:16px;">先測女生線迴歸（含用「修改前」建立的舊存檔開新版程式碼，確認沒有 <code>track</code> 欄位時仍正常運作），再測男孩線完整流程：</p>
+      <ol class="steps">
+        <li>選「改裝小車手的故事」→ 3 張男孩卡、頭像看得出是臉不是車頂。</li>
+        <li>建立男孩角色 → 地圖沒有金幣徽章、次要按鈕文字是「查看我的改裝車庫」。</li>
+        <li>過關前進車庫 → 顯示破爛車、進度 0/6、烤漆區塊顯示「通過第四關」提示、沒有選色球。</li>
+        <li>依序過第 1～3 關，車庫與結算畫面的車子同步變成「修好但髒 → 洗乾淨 → 新輪框」。</li>
+        <li>過第 4 關 → 結算卡出現選色球，點選後當場看到車子變色，且「下一關」按鈕仍可正常點擊；回車庫、重新整理頁面，剛選的顏色都要保留。</li>
+        <li>過第 5 關 → 套件加上去且維持選定顏色；車庫改選別的顏色，套件版本也要跟著換色。</li>
+        <li>過第 6 關 → 結算卡與結局都是全新跑車、結局畫面只有男孩+車、文案是男孩向、無金幣統計。</li>
+        <li>重新開始 → 車子回到 stage 0、車庫烤漆區塊回到「通過第四關」提示。</li>
+        <li>故意在某關答錯太多次 → 結算卡顯示「目前維持原樣」的車，選「結束本局」→ 結局畫面顯示「目前進度的車 + 灰階」，不是重置回 stage 0。</li>
+        <li>手機寬度下檢查選故事畫面、建立角色畫面（6 選 3）、結算卡內嵌選色列、車庫畫面，確認沒有橫向溢出或按鈕被裁切。</li>
       </ol>
     </div>
   </section>
