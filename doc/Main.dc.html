@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap">
+  <style>
+    body{margin:0;}
+    a{ color:#ff69b4; } a:hover{ color:#db7093; }
+    .screen{
+      width:1280px;height:800px;box-sizing:border-box;position:relative;overflow:hidden;
+      font-family:'Quicksand',sans-serif;color:#5a4a42;
+      background:
+        linear-gradient(90deg, rgba(255,182,193,0.16) 50%, transparent 50%),
+        linear-gradient(0deg, rgba(255,182,193,0.16) 50%, transparent 50%),
+        linear-gradient(135deg, #fff0f5 0%, #ffe4e1 100%);
+      background-size: 40px 40px;
+      box-shadow: inset 0 0 0 12px #ffb6c1, inset 0 0 0 16px #ffffff;
+    }
+    .deco{ position:absolute; }
+    .banner{ text-align:center; padding:38px 0 4px; position:relative; }
+    .banner h1{
+      font-weight:700; font-size:42px; margin:0; color:#ff69b4;
+      text-shadow:0 2px 0 rgba(255,255,255,0.8); letter-spacing:1px;
+      display:flex; align-items:center; justify-content:center; gap:14px;
+    }
+    .banner p{ margin:10px 0 0; font-size:17px; color:#9370db; font-weight:600; }
+    .content{ display:flex; flex-direction:column; align-items:center; gap:26px; padding:14px 60px 0; position:relative; }
+    .name-card{
+      width:460px; background:rgba(255,255,255,0.92);
+      border:3px dashed #ffb6c1; border-radius:20px; box-shadow:0 8px 16px rgba(255,182,193,0.3);
+      padding:18px 26px; box-sizing:border-box; display:flex; flex-direction:column; gap:8px;
+    }
+    .name-card label{ font-weight:700; font-size:15px; color:#db7093; }
+    .name-card input{
+      font-family:'Quicksand',sans-serif; font-size:17px; padding:11px 16px; border-radius:14px;
+      border:2px solid #ffc0cb; background:#fffaf5; color:#5a4a42; outline:none;
+    }
+    .avatars{ display:flex; gap:30px; justify-content:center; }
+    .avatar-card{
+      width:216px; background:rgba(255,255,255,0.94);
+      border-radius:22px; padding:16px 12px 18px; box-sizing:border-box;
+      display:flex; flex-direction:column; align-items:center; gap:8px;
+    }
+    .avatar-stage{ width:168px; height:220px; }
+    .avatar-card .name{ font-weight:700; font-size:17px; color:#ff69b4; display:flex; align-items:center; gap:6px; }
+    .avatar-card .desc{ font-size:12.5px; color:#a08a80; text-align:center; line-height:1.5; }
+    .cta-row{ display:flex; justify-content:center; padding-top:6px; }
+    .btn{
+      font-family:'Quicksand',sans-serif; font-weight:700; letter-spacing:1px; border:none; cursor:pointer;
+      border-radius:22px; padding:15px 46px; font-size:19px;
+      background:linear-gradient(180deg,#ffb6c1,#ff69b4); color:#ffffff;
+      box-shadow: 0 6px 0 #db7093, 0 10px 20px rgba(255,105,180,0.35);
+    }
+  </style>
+</helmet>
+<div class="screen">
+  <svg class="deco" style="top:20px;left:26px;" width="56" height="56" viewBox="0 0 56 56">
+    <circle cx="28" cy="28" r="13" fill="#ffd93d"/>
+    <g stroke="#ffd93d" stroke-width="4" stroke-linecap="round">
+      <line x1="28" y1="2" x2="28" y2="10"/><line x1="28" y1="46" x2="28" y2="54"/>
+      <line x1="2" y1="28" x2="10" y2="28"/><line x1="46" y1="28" x2="54" y2="28"/>
+      <line x1="9" y1="9" x2="14" y2="14"/><line x1="42" y1="42" x2="47" y2="47"/>
+      <line x1="47" y1="9" x2="42" y2="14"/><line x1="14" y1="42" x2="9" y2="47"/>
+    </g>
+    <circle cx="24" cy="26" r="1.6" fill="#8a5a4a"/><circle cx="32" cy="26" r="1.6" fill="#8a5a4a"/>
+    <path d="M 23 31 Q 28 35 33 31" fill="none" stroke="#8a5a4a" stroke-width="1.8" stroke-linecap="round"/>
+  </svg>
+  <svg class="deco" style="top:34px;right:34px;" width="70" height="42" viewBox="0 0 70 42">
+    <ellipse cx="35" cy="28" rx="34" ry="13" fill="#ffffff"/>
+    <circle cx="20" cy="18" r="15" fill="#ffffff"/><circle cx="42" cy="12" r="18" fill="#ffffff"/><circle cx="58" cy="20" r="13" fill="#ffffff"/>
+  </svg>
+  <svg class="deco" style="bottom:26px;left:60px;" width="36" height="36" viewBox="0 0 36 36">
+    <circle cx="18" cy="10" r="7" fill="#ffb6c1"/><circle cx="10" cy="18" r="7" fill="#ffb6c1"/>
+    <circle cx="26" cy="18" r="7" fill="#ffb6c1"/><circle cx="14" cy="25" r="7" fill="#ffb6c1"/><circle cx="22" cy="25" r="7" fill="#ffb6c1"/>
+    <circle cx="18" cy="18" r="6" fill="#ffd93d"/>
+  </svg>
+  <svg class="deco" style="bottom:40px;right:70px;" width="30" height="28" viewBox="0 0 30 28">
+    <path d="M15 26 C2 17 2 6 10 4 C13 3 15 6 15 8 C15 6 17 3 20 4 C28 6 28 17 15 26 Z" fill="#ff9eb5"/>
+  </svg>
+
+  <div class="banner">
+    <h1>
+      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 1 l2.6 7.4 L22 11 l-7.4 2.6 L12 21 l-2.6-7.4 L2 11 l7.4-2.6 Z" fill="#ffd93d"/></svg>
+      甜心少女的九九乘法大冒險
+      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 1 l2.6 7.4 L22 11 l-7.4 2.6 L12 21 l-2.6-7.4 L2 11 l7.4-2.6 Z" fill="#ffd93d"/></svg>
+    </h1>
+    <p>和可愛的小白兔與小熊一起，快樂學數學！</p>
+  </div>
+
+  <div class="content">
+    <div class="name-card">
+      <label>輸入你的可愛名字</label>
+      <input type="text" placeholder="例如：草莓小公主..." />
+    </div>
+
+    <div class="avatars">
+      <div class="avatar-card" style="box-shadow:{{girlRing}};">
+        <div class="avatar-stage"><dc-import name="Character" base="girl" state="bare" mood="happy" hint-size="168,220"></dc-import></div>
+        <div class="name">甜美少女</div>
+        <div class="desc">智慧聰穎，最會動腦想辦法</div>
+      </div>
+      <div class="avatar-card" style="box-shadow:{{rabbitRing}};">
+        <div class="avatar-stage"><dc-import name="Character" base="rabbit" state="bare" mood="happy" hint-size="168,220"></dc-import></div>
+        <div class="name">害羞小白兔</div>
+        <div class="desc">動作敏捷，反應總是特別快</div>
+      </div>
+      <div class="avatar-card" style="box-shadow:{{bearRing}};">
+        <div class="avatar-stage"><dc-import name="Character" base="bear" state="bare" mood="happy" hint-size="168,220"></dc-import></div>
+        <div class="name">圓滾滾小熊</div>
+        <div class="desc">穩健踏實，陪你慢慢算清楚</div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <button class="btn">開始可愛冒險 →</button>
+    </div>
+  </div>
+</div>
+<script data-dc-script data-props='{"selectedAvatar":{"editor":"enum","default":"girl","options":["girl","rabbit","bear"],"section":"示範狀態"}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const sel = this.props.selectedAvatar || 'girl';
+    const on = '0 0 0 4px #ff69b4, 0 10px 20px rgba(255,105,180,0.35)';
+    const off = '0 6px 12px rgba(255,182,193,0.35)';
+    return {
+      girlRing: sel === 'girl' ? on : off,
+      rabbitRing: sel === 'rabbit' ? on : off,
+      bearRing: sel === 'bear' ? on : off,
+    };
+  }
+}
+</script>
+</x-dc>
+</body>
+</html>

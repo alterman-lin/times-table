@@ -1,0 +1,8 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 早期貼上測試/處理過程留下的雜圖，未被任何畫面引用
+doc/Gemini_Generated_Image.jpg
+assets/processed/_check_all_items.png

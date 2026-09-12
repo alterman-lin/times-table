@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body{margin:0;}
+    .char-stack{position:relative;width:100%;}
+    .layer-base{display:block;width:100%;height:auto;}
+    .layer{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:bottom center;}
+  </style>
+</helmet>
+<div class="char-stack">
+
+  <sc-if value="{{showGirlHappy}}" hint-placeholder-val="true">
+    <img class="layer-base" src="base_girl_happy.png" alt="">
+  </sc-if>
+  <sc-if value="{{showGirlSad}}" hint-placeholder-val="true">
+    <img class="layer-base" src="base_girl_sad.png" alt="">
+  </sc-if>
+  <sc-if value="{{showGirlUpset}}" hint-placeholder-val="true">
+    <img class="layer-base" src="base_girl_upset.png" alt="" style="filter:{{shabbyFilter}}">
+  </sc-if>
+  <sc-if value="{{isBear}}" hint-placeholder-val="true">
+    <img class="layer-base" src="companion_bear.png" alt="">
+  </sc-if>
+  <sc-if value="{{isRabbit}}" hint-placeholder-val="true">
+    <img class="layer-base" src="companion_rabbit.png" alt="">
+  </sc-if>
+
+  <sc-if value="{{isPantsBloomers}}" hint-placeholder-val="true">
+    <img class="layer" src="pants_bloomers.png" alt="">
+  </sc-if>
+  <sc-if value="{{isPantsOveralls}}" hint-placeholder-val="true">
+    <img class="layer" src="pants_overalls.png" alt="">
+  </sc-if>
+  <sc-if value="{{isSkirtPlaid}}" hint-placeholder-val="true">
+    <img class="layer" src="skirt_plaid.png" alt="">
+  </sc-if>
+  <sc-if value="{{isSkirtTutu}}" hint-placeholder-val="true">
+    <img class="layer" src="skirt_tutu.png" alt="">
+  </sc-if>
+  <sc-if value="{{isTopStrawberry}}" hint-placeholder-val="true">
+    <img class="layer" src="top_strawberry.png" alt="">
+  </sc-if>
+  <sc-if value="{{isTopWhiteLace}}" hint-placeholder-val="true">
+    <img class="layer" src="top_white_lace.png" alt="">
+  </sc-if>
+  <sc-if value="{{isBagHeart}}" hint-placeholder-val="true">
+    <img class="layer" src="bag_heart.png" alt="">
+  </sc-if>
+  <sc-if value="{{isBagRabbit}}" hint-placeholder-val="true">
+    <img class="layer" src="bag_rabbit.png" alt="">
+  </sc-if>
+  <sc-if value="{{isShoesMaryjanes}}" hint-placeholder-val="true">
+    <img class="layer" src="shoes_maryjanes.png" alt="">
+  </sc-if>
+  <sc-if value="{{isShoesRabbitSlippers}}" hint-placeholder-val="true">
+    <img class="layer" src="shoes_rabbitslippers.png" alt="">
+  </sc-if>
+  <sc-if value="{{isAccCatears}}" hint-placeholder-val="true">
+    <img class="layer" src="acc_catears.png" alt="">
+  </sc-if>
+  <sc-if value="{{isAccStarclips}}" hint-placeholder-val="true">
+    <img class="layer" src="acc_starclips.png" alt="">
+  </sc-if>
+
+</div>
+<script data-dc-script data-props='{"base":{"editor":"enum","default":"girl","options":["girl","rabbit","bear"],"section":"造型"},"state":{"editor":"enum","default":"dressed","options":["bare","dressed","shabby"],"section":"造型"},"mood":{"editor":"enum","default":"happy","options":["happy","sad"],"section":"造型"},"topId":{"editor":"enum","default":"strawberry","options":["none","strawberry","white_lace"],"section":"穿搭"},"skirtId":{"editor":"enum","default":"none","options":["none","plaid","tutu"],"section":"穿搭"},"pantsId":{"editor":"enum","default":"none","options":["none","bloomers","overalls"],"section":"穿搭"},"bagId":{"editor":"enum","default":"none","options":["none","heart","rabbit"],"section":"穿搭"},"accessoryId":{"editor":"enum","default":"none","options":["none","catears","starclips"],"section":"穿搭"},"shoesId":{"editor":"enum","default":"none","options":["none","maryjanes","rabbitslippers"],"section":"穿搭"},"$preview":{"width":240,"height":358}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const base = this.props.base || 'girl';
+    const state = this.props.state || 'dressed';
+    const mood = this.props.mood || 'happy';
+
+    const isGirl = base === 'girl';
+    const isRabbit = base === 'rabbit';
+    const isBear = base === 'bear';
+
+    const isDressed = state === 'dressed';
+    const isShabby = state === 'shabby';
+
+    const showSad = isDressed && mood === 'sad';
+    const showUpset = isShabby;
+    const showHappy = !showSad && !showUpset;
+
+    const wearing = isDressed && isGirl;
+    const topId = wearing ? (this.props.topId || 'strawberry') : 'none';
+    const skirtId = wearing ? (this.props.skirtId || 'none') : 'none';
+    const pantsId = wearing ? (this.props.pantsId || 'none') : 'none';
+    const bagId = wearing ? (this.props.bagId || 'none') : 'none';
+    const accessoryId = wearing ? (this.props.accessoryId || 'none') : 'none';
+    const shoesId = wearing ? (this.props.shoesId || 'none') : 'none';
+
+    return {
+      isGirl, isRabbit, isBear,
+      showGirlHappy: isGirl && showHappy,
+      showGirlSad: isGirl && showSad,
+      showGirlUpset: isGirl && showUpset,
+      shabbyFilter: 'grayscale(0.65) brightness(0.88) contrast(0.92)',
+      isTopStrawberry: topId === 'strawberry',
+      isTopWhiteLace: topId === 'white_lace',
+      isSkirtPlaid: skirtId === 'plaid',
+      isSkirtTutu: skirtId === 'tutu',
+      isPantsBloomers: pantsId === 'bloomers',
+      isPantsOveralls: pantsId === 'overalls',
+      isBagHeart: bagId === 'heart',
+      isBagRabbit: bagId === 'rabbit',
+      isAccCatears: accessoryId === 'catears',
+      isAccStarclips: accessoryId === 'starclips',
+      isShoesMaryjanes: shoesId === 'maryjanes',
+      isShoesRabbitSlippers: shoesId === 'rabbitslippers',
+    };
+  }
+}
+</script>
+</x-dc>
+</body>
+</html>

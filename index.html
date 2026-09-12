@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>甜心少女的九九乘法大冒險</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app-frame">
+
+  <!-- 建立角色畫面 -->
+  <section class="screen active" id="screen-create">
+    <div class="banner">
+      <h1>甜心少女的九九乘法大冒險</h1>
+      <p>和可愛的小白兔與小熊一起，快樂學數學！</p>
+    </div>
+    <div class="content">
+      <div id="player-list" class="player-list" hidden>
+        <div class="player-list-title">選擇既有玩家</div>
+        <div id="player-list-items" class="player-list-items"></div>
+      </div>
+      <div class="name-card">
+        <label for="name-input">輸入你的可愛名字</label>
+        <input id="name-input" type="text" maxlength="12" placeholder="例如：草莓小公主...">
+      </div>
+      <div class="avatars" id="avatar-picker">
+        <button class="avatar-card" data-avatar="girl" type="button">
+          <div class="avatar-head"></div>
+          <div class="name">甜美少女</div>
+          <div class="desc">智慧聰穎，最會動腦想辦法</div>
+        </button>
+        <button class="avatar-card" data-avatar="girl2" type="button">
+          <div class="avatar-head"></div>
+          <div class="name">元氣少女</div>
+          <div class="desc">活潑開朗，答題速度像風一樣快</div>
+        </button>
+        <button class="avatar-card" data-avatar="girl3" type="button">
+          <div class="avatar-head"></div>
+          <div class="name">夢幻少女</div>
+          <div class="desc">心思細膩，總能算出最聰明的答案</div>
+        </button>
+      </div>
+      <div class="cta-row">
+        <button class="btn" id="start-btn">開始可愛冒險 →</button>
+      </div>
+      <p class="hint-text" id="create-hint"></p>
+    </div>
+  </section>
+
+  <!-- 關卡地圖畫面 -->
+  <section class="screen" id="screen-map">
+    <div class="topbar">
+      <div class="player-tag">玩家：<span id="map-player-name"></span> <button class="btn btn-small btn-ghost" id="switch-player-btn" type="button" style="margin-left:8px;">切換玩家</button></div>
+      <div class="right-group">
+        <div class="gold"><svg width="16" height="16" viewBox="0 0 30 30"><path d="M15 27 C4 19 4 8 12 5 C14.5 4 15 7 15 9 C15 7 15.5 4 18 5 C26 8 26 19 15 27 Z" fill="#ff5c7a"/></svg><span id="map-coins">0</span></div>
+        <button class="avatar-mini" id="map-shop-btn" title="前往商店"><div></div></button>
+      </div>
+    </div>
+    <div class="map-title">選擇關卡</div>
+    <div class="level-path" id="level-path"></div>
+    <div class="map-actions btn-row">
+      <button class="btn btn-secondary" id="goto-shop-btn">前往甜心商店 🛍</button>
+      <button class="btn" id="map-ending-btn" type="button" hidden>查看結局 →</button>
+    </div>
+  </section>
+
+  <!-- 作答畫面 -->
+  <section class="screen" id="screen-quiz">
+    <div class="topbar">
+      <div class="level-name" id="quiz-level-name"></div>
+      <div class="counter" id="quiz-counter"></div>
+      <div class="right-group">
+        <div class="gold"><svg width="16" height="16" viewBox="0 0 30 30"><path d="M15 27 C4 19 4 8 12 5 C14.5 4 15 7 15 9 C15 7 15.5 4 18 5 C26 8 26 19 15 27 Z" fill="#ff5c7a"/></svg><span id="quiz-coins">0</span></div>
+      </div>
+    </div>
+    <div class="dots" id="quiz-dots"></div>
+    <div class="timer-wrap" id="quiz-timer" hidden>
+      <svg width="76" height="76" viewBox="0 0 76 76">
+        <circle cx="38" cy="38" r="32" fill="#ffffff" stroke="#ffe1ea" stroke-width="8"/>
+        <circle id="timer-ring" cx="38" cy="38" r="32" fill="none" stroke="#ff9eb5" stroke-width="8" stroke-linecap="round" transform="rotate(-90 38 38)"/>
+        <text id="timer-text" x="38" y="44" text-anchor="middle" font-family="Quicksand, sans-serif" font-weight="700" font-size="22" fill="#ff69b4">15</text>
+      </svg>
+    </div>
+    <div class="timer-badge-wrap" id="quiz-untimed-badge" hidden>
+      <div class="timer-badge">
+        <svg width="18" height="12" viewBox="0 0 60 36"><ellipse cx="30" cy="24" rx="29" ry="11" fill="#eaf6ff"/><circle cx="16" cy="16" r="13" fill="#eaf6ff"/><circle cx="36" cy="10" r="15" fill="#eaf6ff"/><circle cx="50" cy="17" r="11" fill="#eaf6ff"/></svg>
+        不限時，慢慢想
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel" id="quiz-label">這個算式對不對呢？</div>
+      <div class="equation" id="quiz-equation">7 × 8 = 54</div>
+      <div class="input-pad" id="quiz-input-pad" hidden>
+        <div class="input-display" id="quiz-input-display">請輸入</div>
+        <div class="keypad" id="quiz-keypad"></div>
+      </div>
+    </div>
+    <div class="choices" id="quiz-choices"></div>
+  </section>
+
+  <!-- 關卡結算畫面 -->
+  <section class="screen" id="screen-result">
+    <div class="result-card" id="result-card"></div>
+  </section>
+
+  <!-- 商店畫面 -->
+  <section class="screen" id="screen-shop">
+    <div class="topbar">
+      <div class="level-name">甜心百寶商店</div>
+      <div class="right-group">
+        <div class="gold"><svg width="16" height="16" viewBox="0 0 30 30"><path d="M15 27 C4 19 4 8 12 5 C14.5 4 15 7 15 9 C15 7 15.5 4 18 5 C26 8 26 19 15 27 Z" fill="#ff5c7a"/></svg><span id="shop-coins">0</span></div>
+        <button class="btn btn-small" id="shop-ending-btn" type="button" hidden>查看結局 →</button>
+        <button class="btn btn-small btn-ghost" id="shop-back-btn">返回地圖</button>
+      </div>
+    </div>
+    <div class="shop-body">
+      <div class="shop-preview"><div class="avatar-stage-lg" id="shop-char-preview"></div></div>
+      <div class="shop-categories" id="shop-categories"></div>
+    </div>
+  </section>
+
+  <!-- 結局畫面 -->
+  <section class="screen" id="screen-ending">
+    <div class="ending-content" id="ending-content"></div>
+  </section>
+
+</div>
+
+<script src="js/questions.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/shop.js"></script>
+<script src="js/character.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

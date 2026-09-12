@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>九九乘法闖關遊戲 · 設計文件</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap">
+<style>
+  :root{
+    --pink-1:#fff0f5; --pink-2:#ffe4e1; --pink-3:#ffd7e2;
+    --ink:#5a4a42; --ink-strong:#ff69b4; --accent:#ff69b4; --accent-light:#ffb6c1;
+    --purple:#9370db; --muted:#a08a80;
+    --card:rgba(255,255,255,0.88); --card-border:#ffb6c1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:'Quicksand', sans-serif; color:var(--ink);
+    background:
+      linear-gradient(90deg, rgba(255,182,193,0.14) 50%, transparent 50%),
+      linear-gradient(0deg, rgba(255,182,193,0.14) 50%, transparent 50%),
+      linear-gradient(135deg, var(--pink-1) 0%, var(--pink-2) 100%);
+    background-size: 40px 40px;
+    min-height:100vh;
+  }
+  .wrap{ max-width:880px; margin:0 auto; padding:56px 28px 100px; }
+  header.hero{ text-align:center; margin-bottom:44px; }
+  header.hero .kicker{ font-weight:700; letter-spacing:4px; font-size:13px; color:var(--purple); text-transform:uppercase; }
+  header.hero h1{
+    font-weight:700; font-size:40px; margin:10px 0 12px; color:var(--ink-strong);
+    text-shadow:0 2px 0 rgba(255,255,255,0.7); letter-spacing:1px;
+  }
+  header.hero p{ color:var(--purple); font-size:16px; margin:0; font-weight:600; }
+  header.hero .rule{ width:120px; height:3px; margin:22px auto 0; background:linear-gradient(90deg, transparent, var(--accent), transparent); }
+
+  nav.toc{
+    background:var(--card); border:3px dashed var(--card-border); border-radius:20px;
+    padding:22px 28px; margin-bottom:40px; box-shadow:0 8px 18px rgba(255,182,193,0.3);
+  }
+  nav.toc h2{ font-size:15px; font-weight:700; letter-spacing:2px; color:var(--accent); margin:0 0 12px; }
+  nav.toc ol{ margin:0; padding-left:22px; columns:2; column-gap:32px; font-size:14px; line-height:2; }
+  nav.toc a{ color:var(--ink); text-decoration:none; border-bottom:1px dotted var(--accent-light); }
+  nav.toc a:hover{ color:var(--accent); }
+
+  section{ margin-bottom:40px; }
+  section h2{
+    font-weight:700; font-size:24px; color:var(--ink-strong);
+    display:flex; align-items:center; gap:12px; margin:0 0 18px; padding-bottom:10px;
+    border-bottom:3px dashed var(--card-border);
+  }
+  section h2 .num{
+    font-size:14px; font-weight:700; width:30px; height:30px; border-radius:50%; flex:none;
+    display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(circle at 35% 30%, #fff3d6, #ffd93d);
+    color:#8a6a00; border:2px solid #ffffff; box-shadow:0 3px 6px rgba(255,182,193,0.4);
+  }
+  .card{
+    background:var(--card); border:3px dashed var(--card-border); border-radius:18px;
+    padding:24px 28px; box-shadow:0 8px 18px rgba(255,182,193,0.25);
+  }
+  .card + .card{ margin-top:16px; }
+  p{ line-height:1.85; font-size:15.5px; margin:0 0 14px; }
+  p:last-child{ margin-bottom:0; }
+  strong{ color:var(--ink-strong); }
+  code{
+    font-family:'SFMono-Regular', Consolas, monospace; background:#ffe4e1; border:1px solid var(--card-border);
+    border-radius:6px; padding:1px 6px; font-size:0.9em; color:#c2185b;
+  }
+
+  .confirm-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:14px; }
+  .confirm-list li{
+    background:var(--card); border:2px solid var(--card-border); border-left:6px solid var(--accent);
+    border-radius:14px; padding:16px 20px; line-height:1.8; font-size:15px;
+  }
+
+  .file-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
+  .file-list li{
+    background:var(--card); border:1px solid var(--card-border); border-radius:12px;
+    padding:12px 16px; font-size:14.5px; line-height:1.7;
+  }
+  .file-list code{ font-weight:700; }
+
+  ol.flow{ counter-reset:flow; list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:14px; }
+  ol.flow > li{
+    counter-increment:flow; position:relative; background:var(--card); border:2px solid var(--card-border);
+    border-radius:16px; padding:18px 22px 18px 58px; box-shadow:0 6px 14px rgba(255,182,193,0.2);
+  }
+  ol.flow > li::before{
+    content:counter(flow); position:absolute; left:16px; top:18px; width:28px; height:28px; border-radius:50%;
+    background:linear-gradient(180deg,#ffb6c1,#ff69b4); color:#ffffff; border:2px solid #ffffff;
+    font-weight:700; font-size:14px; display:flex; align-items:center; justify-content:center;
+  }
+  ol.flow > li > b{ font-size:16px; color:var(--ink-strong); }
+  ol.flow ul{ margin:10px 0 0; padding-left:20px; }
+  ol.flow ul li{ margin-bottom:6px; line-height:1.75; font-size:14.5px; }
+  ol.flow ul li ul{ margin-top:6px; }
+
+  ol.steps{ margin:0; padding-left:0; list-style:none; counter-reset:step; display:flex; flex-direction:column; gap:10px; }
+  ol.steps li{
+    counter-increment:step; position:relative; padding-left:36px; font-size:14.5px; line-height:1.8;
+  }
+  ol.steps li::before{
+    content:counter(step); position:absolute; left:0; top:1px; width:24px; height:24px; border-radius:8px;
+    background:linear-gradient(180deg,#8fe0b8,#4fb286); color:#ffffff; font-weight:700; font-size:12.5px;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  .tag-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; }
+  .tag{
+    font-size:12px; font-weight:700; padding:6px 14px; border-radius:20px;
+    background:linear-gradient(180deg,#ffb6c1,#ff69b4); color:#ffffff; border:1.5px solid #ffffff;
+  }
+
+  footer{ text-align:center; margin-top:60px; color:var(--muted); font-size:13px; }
+  footer .rule{ width:120px; height:3px; margin:0 auto 18px; background:linear-gradient(90deg, transparent, var(--accent), transparent); }
+
+  @media (max-width:640px){
+    .wrap{ padding:36px 16px 70px; }
+    header.hero h1{ font-size:28px; }
+    nav.toc ol{ columns:1; }
+    section h2{ font-size:20px; }
+    ol.flow > li{ padding:16px 16px 16px 52px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="kicker">Design Document</div>
+    <h1>九九乘法闖關遊戲</h1>
+    <p>設計文件 · 可愛青春方格風教學小遊戲</p>
+    <div class="rule"></div>
+  </header>
+
+  <nav class="toc">
+    <h2>目錄</h2>
+    <ol>
+      <li><a href="#context">背景與需求脈絡</a></li>
+      <li><a href="#tech">技術方案</a></li>
+      <li><a href="#flow">關卡與遊戲流程</a></li>
+      <li><a href="#data">資料設計重點</a></li>
+      <li><a href="#verify">驗證方式</a></li>
+    </ol>
+  </nav>
+
+  <section id="context">
+    <h2><span class="num">1</span>背景與需求脈絡</h2>
+    <div class="card">
+      <p>使用者想要一個幫助學生練習九九乘法的網頁遊戲。這是全新專案（<code>E:\教育\小遊戲\99</code> 目前是空資料夾，非 git repo），因此不需要相容既有程式碼，可以自由選擇最單純、最容易開啟與維護的架構。</p>
+      <p>核心教學設計是「難度漸進」：先用不限時的是非題、選擇題建立信心，再用自行輸入答案訓練回想能力，最後加上時間壓力（限時版的是非題/選擇題/輸入題）模擬熟練度測驗。每關過關（10 題對 7 題以上）發放金幣，金幣可在商店購買服裝配件，全破關時角色會穿上所有已購買的裝備；若玩家中途放棄，角色會呈現落魄樣。這個「養成/裝扮」機制是額外的正向回饋，用來提升學生反覆練習的動機。</p>
+    </div>
+    <p style="margin:18px 0 10px; font-weight:700; font-size:14px; color:var(--purple); letter-spacing:1px;">已與使用者確認的關鍵行為</p>
+    <ul class="confirm-list">
+      <li><strong>關卡失敗處理：</strong>兩種都要。失敗（10 題對 &lt;7 題）時彈出選擇：「重新挑戰本關」（換一組新題目重考同一關）或「結束本局，看落魄結局」（結束本次遊戲，角色顯示落魄樣，並可重新開始）。</li>
+      <li><strong>頭像產生方式：</strong>先用預設圖示/SVG 角色的概念設計，實際美術外觀（頭像選項、配色、服裝插畫風格）留到真正動工時再與使用者討論確認，現在只需把系統設計成「可替換美術資源」的架構。</li>
+    </ul>
+  </section>
+
+  <section id="tech">
+    <h2><span class="num">2</span>技術方案</h2>
+    <div class="card">
+      <p>純前端、零建置、零伺服器依賴的靜態網頁遊戲，方便老師/學生直接雙擊開啟或丟上任何靜態空間：</p>
+    </div>
+    <ul class="file-list" style="margin-top:16px;">
+      <li><code>index.html</code> — 遊戲外殼，所有畫面（建立角色、關卡地圖、作答、商店、結算、結局）用一組 <code>&lt;section&gt;</code> 切換顯示/隱藏，不用框架、不用路由。</li>
+      <li><code>css/style.css</code> — 明亮童趣風格、響應式（手機/平板/桌機皆可玩），是非題/選擇題/數字鍵盤三種作答 UI 的樣式。</li>
+      <li><code>js/questions.js</code> — 九九乘法題目產生器：依關卡型態產生是非題（含刻意答錯的干擾式）、選擇題（含常見錯誤的三個誘答選項）、輸入題（純數字），確保 10 題不重複。</li>
+      <li><code>js/game.js</code> — 遊戲狀態機：管理目前玩家、關卡序列（6 關）、計時器、答題判分、過關/失敗分支、金幣結算。</li>
+      <li><code>js/character.js</code> — 角色渲染：base 角色（SVG 分層）+ 依 <code>equipped</code> 狀態疊加服裝圖層；另外提供「落魄」外觀（灰階/破損疊圖）。</li>
+      <li><code>js/shop.js</code> — 商店資料（衣服／裙子／褲子／包包／飾品／鞋子六個欄位的品項、價格、對應圖層 id）與購買/穿脫邏輯。</li>
+      <li><code>js/storage.js</code> — <code>localStorage</code> 存讀：玩家名單（名字+頭像選擇）、單局進度（目前關卡、金幣、擁有品項、已裝備品項、各關分數）。</li>
+    </ul>
+    <p style="margin-top:16px; color:var(--muted); font-size:14.5px;">不需要後端、不需要帳號系統；資料只存在使用者自己瀏覽器的 <code>localStorage</code>。</p>
+  </section>
+
+  <section id="flow">
+    <h2><span class="num">3</span>關卡與遊戲流程</h2>
+    <ol class="flow">
+      <li><b>建立角色畫面</b>
+        <p style="margin:8px 0 0; font-size:14.5px;">輸入名字、從預設圖示中選頭像（之後可擴充上傳照片，本次先不做），「開始遊戲」。可從清單挑選/刪除既有玩家紀錄以支援多人共用同一台電腦。</p>
+      </li>
+      <li><b>關卡地圖畫面</b>
+        <p style="margin:8px 0 0; font-size:14.5px;">顯示 6 關路徑（不限時是非題 → 不限時選擇題 → 不限時輸入題 → 限時是非題 → 限時選擇題 → 限時輸入題），未達成的關卡鎖定，已過關顯示星星/勾勾，同時顯示目前金幣與角色小預覽。</p>
+      </li>
+      <li><b>作答畫面</b>
+        <p style="margin:8px 0 0; font-size:14.5px;">每關 10 題，共用同一套流程，依型態切換 UI 元件：</p>
+        <ul>
+          <li>是非題：顯示一個乘法算式（真/假各半機率），按「對」/「錯」。</li>
+          <li>選擇題：顯示 <code>a × b = ?</code>，四選一（1 正解 + 3 常見錯誤誘答）。</li>
+          <li>輸入題：<code>a × b = ?</code>，畫面內建數字鍵盤（0-9、清除、送出），不依賴實體鍵盤，觸控裝置也能玩。</li>
+          <li>限時關卡（第 4-6 關）在上述三種 UI 上疊加每題倒數（例如是非/選擇 15 秒、輸入 20 秒，可於 <code>game.js</code> 常數調整），超時視為答錯並自動進下一題。</li>
+        </ul>
+      </li>
+      <li><b>關卡結算</b>
+        <ul>
+          <li><strong>過關（≥7/10）：</strong>慶祝動畫、發放金幣（基礎值 + 每題對值，限時關卡加成），按鈕「前往商店」與「下一關」。</li>
+          <li><strong>失敗（&lt;7/10）：</strong>依需求彈出兩個選項——
+            <ul>
+              <li>「重新挑戰本關」：換一組新的 10 題，重考同一關，進度與已購買物品不變。</li>
+              <li>「結束本局」：進入落魄結局畫面（角色套用落魄外觀），並提供「重新開始」以新局重來（金幣與購買物品重置，名字/頭像可沿用）。</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><b>商店畫面</b>
+        <p style="margin:8px 0 0; font-size:14.5px;">每次過關後可進入（也可略過先繼續下一關再回來逛）。六個裝備欄位各自列出可購買品項與價格，已擁有標示「已擁有」，同欄位若擁有多件可切換裝備哪一件。角色即時預覽會反映目前裝備狀態。</p>
+      </li>
+      <li><b>結局畫面</b>
+        <ul>
+          <li><strong>全破 6 關：</strong>完整角色圖，身上穿著六個欄位目前裝備的所有品項（= 玩家買到的東西都穿在身上），顯示過關統計（正確率、用時、獲得金幣），可「重新開始」再玩一輪。</li>
+          <li><strong>中途放棄：</strong>角色套用「落魄」外觀（例如灰階/破舊疊圖 + 沮喪表情），鼓勵訊息 + 「重新開始」。</li>
+        </ul>
+      </li>
+    </ol>
+  </section>
+
+  <section id="data">
+    <h2><span class="num">4</span>資料設計重點</h2>
+    <div class="card">
+      <p>題目池：1–9 × 1–9 共 81 組，每關隨機抽 10 題且關內不重複；是非題錯誤選項用「答案加減一個小偏移」產生，選擇題誘答用常見錯誤（相鄰的九九乘法結果、任一因數 ±1 的結果）產生，避免明顯不合理的選項。</p>
+      <p>過關門檻固定 7/10，全部 6 關皆同一標準。</p>
+      <p>金幣與商店品項只是概念性數字/清單，實際數值與品項美術在 <code>js/shop.js</code> 內以資料表方式定義，方便之後調整難度曲線與服裝內容而不用改邏輯程式。</p>
+      <p>角色美術先用可替換的分層 SVG／色塊佔位，正式素材風格（頭像清單長相、服裝插畫）留到實作階段再與使用者確認，不在本次規劃內鎖定。</p>
+      <div class="tag-row">
+        <span class="tag">81 組題目</span>
+        <span class="tag">7 / 10 過關門檻</span>
+        <span class="tag">6 個裝備欄位</span>
+        <span class="tag">分層 SVG 角色</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="verify">
+    <h2><span class="num">5</span>驗證方式</h2>
+    <div class="card">
+      <p style="margin-bottom:16px;">專案無需建置，直接用瀏覽器開啟 <code>index.html</code>（或透過 <code>preview_start</code> 起一個靜態伺服器）手動走過整條流程：</p>
+      <ol class="steps">
+        <li>建立角色（輸入名字、選頭像）。</li>
+        <li>依序完成不限時是非題／選擇題／輸入題三關，確認數字鍵盤在滑鼠與觸控模擬下都可用。</li>
+        <li>故意在某一關答錯 4 題以上，確認「重新挑戰本關」與「結束本局看落魄結局」兩個分支都能正確運作。</li>
+        <li>完成限時三關，確認倒數計時、超時自動判錯與跳題邏輯正確。</li>
+        <li>每次過關後進商店購買品項，確認金幣扣款、已擁有標示、裝備切換即時反映在角色預覽上。</li>
+        <li>全破 6 關，確認結局畫面角色身上顯示所有目前裝備的品項；另開一輪測試中途放棄的落魄結局畫面。</li>
+        <li>用瀏覽器工具切換手機尺寸，確認版面與按鈕可正常操作。</li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>
+    <div class="rule"></div>
+    九九乘法闖關遊戲 · 設計文件 · 由 Claude Code 整理自規劃階段的討論結論
+  </footer>
+
+</div>
+</body>
+</html>

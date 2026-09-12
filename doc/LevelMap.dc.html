@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap">
+  <style>
+    body{margin:0;}
+    .screen{
+      width:1280px;height:800px;box-sizing:border-box;position:relative;overflow:hidden;
+      font-family:'Quicksand',sans-serif;color:#5a4a42;
+      background:
+        linear-gradient(90deg, rgba(184,226,242,0.22) 50%, transparent 50%),
+        linear-gradient(0deg, rgba(184,226,242,0.22) 50%, transparent 50%),
+        linear-gradient(135deg, #eaf6ff 0%, #fdf1f7 100%);
+      background-size: 40px 40px;
+      box-shadow: inset 0 0 0 12px #ffb6c1, inset 0 0 0 16px #ffffff;
+    }
+    .cloud{ position:absolute; opacity:0.9; }
+    .topbar{
+      position:absolute; top:16px; left:16px; right:16px; height:76px; display:flex; align-items:center;
+      justify-content:space-between; padding:0 26px; box-sizing:border-box;
+      background:rgba(255,255,255,0.85); border:3px dashed #ffb6c1; border-radius:26px;
+    }
+    .player{ display:flex; align-items:center; gap:14px; }
+    .player-avatar{ width:48px; height:66px; }
+    .player-name{ font-weight:700; font-size:19px; color:#ff69b4; }
+    .gold{ display:flex; align-items:center; gap:8px; font-weight:700; font-size:20px; color:#e05a7a; }
+    .title-strip{ position:absolute; top:112px; left:0; right:0; text-align:center; }
+    .title-strip h1{ font-weight:700; font-size:28px; margin:0; color:#ff69b4; letter-spacing:1px; }
+    .map{ position:absolute; top:176px; left:0; right:0; bottom:0; }
+    .node{ position:absolute; width:150px; display:flex; flex-direction:column; align-items:center; gap:6px; transform:translate(-50%,-50%); }
+    .badge{ width:78px; height:78px; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; box-sizing:border-box; }
+    .badge .num{ font-weight:700; font-size:26px; }
+    .petals{ position:absolute; inset:-14px; }
+    .badge-done{ background:radial-gradient(circle at 35% 30%, #ffe1ea, #ff9eb5); border:4px solid #ffffff; box-shadow:0 6px 14px rgba(255,105,180,0.35); }
+    .badge-done .num{ color:#c23b64; }
+    .badge-current{ background:radial-gradient(circle at 35% 30%, #fff9d6, #ffd93d); border:4px solid #ffffff; box-shadow:0 0 0 8px rgba(255,217,61,0.35), 0 8px 18px rgba(255,105,180,0.35); }
+    .badge-current .num{ color:#a3720c; }
+    .badge-locked{ background:linear-gradient(180deg,#dbe6ef,#c3d2e0); border:4px solid #ffffff; box-shadow:0 4px 10px rgba(120,140,160,0.25); }
+    .badge-locked .num{ color:#8496a8; }
+    .badge-final{ width:96px; height:96px; }
+    .badge-final .num{ font-size:32px; }
+    .badge-final .lock-icon{ top:-16px; right:-10px; }
+    .label{ font-weight:700; font-size:14px; text-align:center; color:#c23b64; line-height:1.4; }
+    .label.locked{ color:#93a3b2; }
+    .tag{ font-size:11px; font-weight:700; padding:3px 12px; border-radius:14px; }
+    .tag-done{ background:#4fb286; color:#f0fff8; }
+    .tag-current{ background:#ffd93d; color:#7a5a00; }
+    .tag-locked{ background:#c3d2e0; color:#5d6d7c; }
+    .lock-icon{ position:absolute; top:-10px; right:-6px; width:28px; height:28px; }
+  </style>
+</helmet>
+<div class="screen">
+  <svg class="cloud" style="top:150px;left:120px;" width="60" height="36" viewBox="0 0 60 36"><ellipse cx="30" cy="24" rx="29" ry="11" fill="#ffffff"/><circle cx="16" cy="16" r="13" fill="#ffffff"/><circle cx="36" cy="10" r="15" fill="#ffffff"/><circle cx="50" cy="17" r="11" fill="#ffffff"/></svg>
+  <svg class="cloud" style="top:640px;left:900px;" width="60" height="36" viewBox="0 0 60 36"><ellipse cx="30" cy="24" rx="29" ry="11" fill="#ffffff"/><circle cx="16" cy="16" r="13" fill="#ffffff"/><circle cx="36" cy="10" r="15" fill="#ffffff"/><circle cx="50" cy="17" r="11" fill="#ffffff"/></svg>
+
+  <div class="topbar">
+    <div class="player">
+      <div class="player-avatar"><dc-import name="Character" base="girl" state="dressed" mood="happy" hint-size="48,66"></dc-import></div>
+      <div class="player-name">小恩</div>
+    </div>
+    <div class="gold">
+      <svg width="26" height="26" viewBox="0 0 30 30"><path d="M15 27 C4 19 4 8 12 5 C14.5 4 15 7 15 9 C15 7 15.5 4 18 5 C26 8 26 19 15 27 Z" fill="#ff5c7a"/><circle cx="12" cy="13" r="1.2" fill="#ffe1ea"/><circle cx="17" cy="16" r="1.2" fill="#ffe1ea"/><circle cx="13" cy="19" r="1.2" fill="#ffe1ea"/><path d="M12 4 Q15 1 18 4" fill="none" stroke="#4fb286" stroke-width="2" stroke-linecap="round"/></svg>
+      120
+    </div>
+  </div>
+
+  <div class="title-strip"><h1>夢幻雲端花園 · 選擇關卡</h1></div>
+
+  <svg class="map" width="1280" height="630" viewBox="0 0 1280 630" style="position:absolute;top:0;left:0;">
+    <line x1="140" y1="430" x2="360" y2="330" stroke="#ffb6c1" stroke-width="6" stroke-dasharray="2 16" stroke-linecap="round"/>
+    <line x1="360" y1="330" x2="600" y2="390" stroke="#ffb6c1" stroke-width="6" stroke-dasharray="2 16" stroke-linecap="round"/>
+    <line x1="600" y1="390" x2="820" y2="250" stroke="#c3d2e0" stroke-width="6" stroke-dasharray="2 16" stroke-linecap="round"/>
+    <line x1="820" y1="250" x2="1040" y2="330" stroke="#c3d2e0" stroke-width="6" stroke-dasharray="2 16" stroke-linecap="round"/>
+    <line x1="1040" y1="330" x2="1140" y2="150" stroke="#c3d2e0" stroke-width="6" stroke-dasharray="2 16" stroke-linecap="round"/>
+  </svg>
+
+  <div class="map">
+    <div class="node" style="left:140px;top:430px;">
+      <div class="badge badge-done">
+        <svg class="petals" viewBox="0 0 106 106"><g fill="#ffd7e2"><circle cx="53" cy="10" r="12"/><circle cx="53" cy="96" r="12"/><circle cx="10" cy="53" r="12"/><circle cx="96" cy="53" r="12"/></g></svg>
+        <div class="num">1</div>
+      </div>
+      <div class="label">新手試煉<br/>是非對決</div>
+      <div class="tag tag-done">已過關</div>
+    </div>
+    <div class="node" style="left:360px;top:330px;">
+      <div class="badge badge-done">
+        <svg class="petals" viewBox="0 0 106 106"><g fill="#ffd7e2"><circle cx="53" cy="10" r="12"/><circle cx="53" cy="96" r="12"/><circle cx="10" cy="53" r="12"/><circle cx="96" cy="53" r="12"/></g></svg>
+        <div class="num">2</div>
+      </div>
+      <div class="label">智慧抉擇<br/>選擇挑戰</div>
+      <div class="tag tag-done">已過關</div>
+    </div>
+    <div class="node" style="left:600px;top:390px;">
+      <div class="badge badge-current">
+        <svg class="petals" viewBox="0 0 106 106"><g fill="#fff3b0"><circle cx="53" cy="10" r="12"/><circle cx="53" cy="96" r="12"/><circle cx="10" cy="53" r="12"/><circle cx="96" cy="53" r="12"/></g></svg>
+        <div class="num">3</div>
+      </div>
+      <div class="label">心算奇兵<br/>輸入試煉</div>
+      <div class="tag tag-current">前往挑戰</div>
+    </div>
+    <div class="node" style="left:820px;top:250px;">
+      <div class="badge badge-locked">
+        <svg class="lock-icon" viewBox="0 0 28 28">
+          <ellipse cx="14" cy="10" rx="10" ry="4" fill="none" stroke="#8496a8" stroke-width="2"/>
+          <rect x="6" y="10" width="16" height="14" rx="4" fill="#eef3f7" stroke="#8496a8" stroke-width="2"/>
+          <ellipse cx="10" cy="4" rx="2.4" ry="4" fill="#eef3f7" stroke="#8496a8" stroke-width="1.6" transform="rotate(-18 10 4)"/>
+          <ellipse cx="18" cy="4" rx="2.4" ry="4" fill="#eef3f7" stroke="#8496a8" stroke-width="1.6" transform="rotate(18 18 4)"/>
+        </svg>
+        <div class="num">4</div>
+      </div>
+      <div class="label locked">疾風是非<br/>限時對決</div>
+      <div class="tag tag-locked">尚未解鎖</div>
+    </div>
+    <div class="node" style="left:1040px;top:330px;">
+      <div class="badge badge-locked">
+        <svg class="lock-icon" viewBox="0 0 28 28">
+          <ellipse cx="14" cy="10" rx="10" ry="4" fill="none" stroke="#8496a8" stroke-width="2"/>
+          <rect x="6" y="10" width="16" height="14" rx="4" fill="#eef3f7" stroke="#8496a8" stroke-width="2"/>
+          <ellipse cx="10" cy="4" rx="2.4" ry="4" fill="#eef3f7" stroke="#8496a8" stroke-width="1.6" transform="rotate(-18 10 4)"/>
+          <ellipse cx="18" cy="4" rx="2.4" ry="4" fill="#eef3f7" stroke="#8496a8" stroke-width="1.6" transform="rotate(18 18 4)"/>
+        </svg>
+        <div class="num">5</div>
+      </div>
+      <div class="label locked">閃電抉擇<br/>限時選擇</div>
+      <div class="tag tag-locked">尚未解鎖</div>
+    </div>
+    <div class="node" style="left:1140px;top:150px;">
+      <div class="badge badge-locked badge-final">
+        <svg class="lock-icon" viewBox="0 0 28 28">
+          <ellipse cx="14" cy="10" rx="10" ry="4" fill="none" stroke="#8496a8" stroke-width="2"/>
+          <rect x="6" y="10" width="16" height="14" rx="4" fill="#eef3f7" stroke="#8496a8" stroke-width="2"/>
+          <ellipse cx="10" cy="4" rx="2.4" ry="4" fill="#eef3f7" stroke="#8496a8" stroke-width="1.6" transform="rotate(-18 10 4)"/>
+          <ellipse cx="18" cy="4" rx="2.4" ry="4" fill="#eef3f7" stroke="#8496a8" stroke-width="1.6" transform="rotate(18 18 4)"/>
+        </svg>
+        <div class="num">6</div>
+      </div>
+      <div class="label locked">究極心算<br/>限時輸入（畢業關）</div>
+      <div class="tag tag-locked">尚未解鎖</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

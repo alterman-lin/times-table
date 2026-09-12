@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "doc-preview",
+      "runtimeExecutable": "C:\\Users\\GHOST\\AppData\\Local\\OpenAI\\Codex\\bin\\5b9024f90663758b\\node.exe",
+      "runtimeArgs": ["doc-server.js"],
+      "port": 8934
+    },
+    {
+      "name": "game-preview",
+      "runtimeExecutable": "C:\\Users\\GHOST\\AppData\\Local\\OpenAI\\Codex\\bin\\5b9024f90663758b\\node.exe",
+      "runtimeArgs": ["game-server.js"],
+      "port": 8935
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1280, "h": 800 },
+    { "file": "LevelMap.dc.html", "x": 1380, "y": 0, "w": 1280, "h": 800 },
+    { "file": "QuizTrueFalse.dc.html", "x": 2760, "y": 0, "w": 1280, "h": 800 },
+    { "file": "QuizMultipleChoice.dc.html", "x": 4140, "y": 0, "w": 1280, "h": 800 },
+    { "file": "QuizInput.dc.html", "x": 0, "y": 1000, "w": 1280, "h": 800 },
+    { "file": "LevelResult.dc.html", "x": 1380, "y": 1000, "w": 1280, "h": 800 },
+    { "file": "Shop.dc.html", "x": 2760, "y": 1000, "w": 1280, "h": 800 },
+    { "file": "Ending.dc.html", "x": 4140, "y": 1000, "w": 1280, "h": 800 },
+    { "file": "Character.dc.html", "x": 0, "y": 1950, "w": 260, "h": 380 }
+  ],
+  "annotations": [
+    { "id": "style-note", "x": 0, "y": -140, "w": 640, "text": "風格：可愛青春方格風\n粉嫩方格紋、太陽白雲花朵、草莓金幣、甜美少女主角 + 小白兔/小熊夥伴\n下方 Character 是共用角色元件，其餘畫面都會匯入它" }
+  ],
+  "launch": { "view": "focused", "file": "Main.dc.html" }
+}
