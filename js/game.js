@@ -747,9 +747,13 @@
         <div class="ending-stats">
           <div class="r-stat"><div class="num">6/6</div><div class="lab">關卡全破</div></div>
         </div>
-        <div class="btn-row"><button class="btn" id="e-restart-btn">重新開始新的一局</button></div>
+        <div class="btn-row">
+          <button class="btn btn-ghost" id="e-garage-btn">回車庫繼續改裝</button>
+          <button class="btn" id="e-restart-btn">重新開始新的一局</button>
+        </div>
       `;
       renderPlayerStage($('#e-stage'), player, { mood: 'happy' });
+      $('#e-garage-btn').addEventListener('click', goToGarage);
       $('#e-restart-btn').addEventListener('click', restartRun);
       showScreen('screen-ending');
       return;
@@ -762,7 +766,10 @@
       <div class="ending-stats">
         <div class="r-stat"><div class="num">${player.coins}</div><div class="lab">總金幣</div></div>
       </div>
-      <div class="btn-row"><button class="btn" id="e-restart-btn">重新開始新的一局</button></div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" id="e-shop-btn">回商店繼續打扮</button>
+        <button class="btn" id="e-restart-btn">重新開始新的一局</button>
+      </div>
     `;
     const stage = $('#e-stage');
     stage.style.display = 'flex';
@@ -779,6 +786,7 @@
     renderCharacter(mainWrap, { base: player.avatar, state: 'dressed', mood: 'happy', equipped: player.equipped });
     renderCharacter(rabbitWrap, { base: 'rabbit', state: 'dressed', mood: 'happy' });
     renderCharacter(bearWrap, { base: 'bear', state: 'dressed', mood: 'happy' });
+    $('#e-shop-btn').addEventListener('click', goToShop);
     $('#e-restart-btn').addEventListener('click', restartRun);
     showScreen('screen-ending');
   }
